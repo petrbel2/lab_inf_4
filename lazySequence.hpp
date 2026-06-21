@@ -10,10 +10,11 @@ class LazySequence: public Sequence<data_type>
 {
 private:
     Omega length;
+    int gen_pos;
     Generator<data_type>* generator;
 public:
     //LazySequence(): length(0), generator() {}
-    LazySequence(Generator<data_type>* gen): length(0, 0), generator(gen) {}
+    LazySequence(Generator<data_type>* gen): length(1, 0), gen_pos(0), generator(gen) {}
     //LazySequence (data_type* items, int count);
     //LazySequence (Sequence<data_type>* seq);
     //LazySequence (data_type(*)(Sequence<data_type>*), Sequence<data_type>);

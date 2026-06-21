@@ -4,10 +4,8 @@
 
 int main() {
     // Создаем генератор для последовательности квадратов
-    auto square_gen = new Generator<int>([](int index) {return index * index;
-    }, 10);
+    auto square_gen = new SquareGenerator<int>();
     
     LazySequence<int> test_sequence(square_gen);
 
-    
 }
