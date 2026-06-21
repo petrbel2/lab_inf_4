@@ -45,6 +45,10 @@ public:
     //LazySequence <data_type>*InsertAt(data_type item, int index);
 
     //LazySequence <data_type>* Concat(LazySequence <data_type> *list);
+
+    ~LazySequence() {
+        delete[] generator;
+    }
 };
 
 #endif

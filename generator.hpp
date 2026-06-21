@@ -44,12 +44,6 @@ public:
         return current_position;
     }
     
-    // Пропустить n элементов
-    void skip(int n) {
-        for (int i = 0; i < n && hasNext(); ++i) {
-            current_position++;
-        }
-    }
     
     // Получить элемент по индексy
     data_type get(int index) {
