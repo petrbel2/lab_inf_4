@@ -1,19 +1,23 @@
 #ifndef LAZYSEQUENCE_H 
 #define LAZYSEQUENCE_H
 #include "sequence.hpp"
+#include "omega.hpp"
 
 template <typename data_type>
 class LazySequence: public Sequence<data_type>
 {
 private:
-    LinkedList<data_type> list;
+    Omega length;
+    Generator<data_type>* generator;
+    int position;
 public:
     LazySequence(): list() {}
     LazySequence (data_type* items, int count);
     LazySequence (Sequence<data_type>* seq);
     LazySequence (data_type(*)(Sequence<data_type>*), Sequence<data_type>)
     LazySequence (std::function<data_type>(Sequence<data_type>*), Sequence<data_type>*)
-    Cardinal GetLength() const{
+    Omega GetLength() const{
+        return length;
     }
 
     data_type GetFirst() {
@@ -32,13 +36,13 @@ public:
 
     size_t GetMaterializedCount() const;
 
-    Sequence<T>* Append(T item);
+    Sequence<data_type>* Append(data_type item);
 
-    Sequence<T>*Prepend(T item);
+    Sequence<data_type>*Prepend(data_type item);
 
-    LazySequence <T>*InsertAt(T item, int index);
+    LazySequence <data_type>*InsertAt(data_type item, int index);
 
-    LazySequence <T>* Concat(LazySequence <T> *list);
+    LazySequence <data_type>* Concat(LazySequence <data_type> *list);
 };
 
 #endif
