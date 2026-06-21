@@ -2,6 +2,8 @@
 #define LAZYSEQUENCE_H
 #include "sequence.hpp"
 #include "omega.hpp"
+#include "generator.hpp"
+#include <functional>
 
 template <typename data_type>
 class LazySequence: public Sequence<data_type>
@@ -9,13 +11,12 @@ class LazySequence: public Sequence<data_type>
 private:
     Omega length;
     Generator<data_type>* generator;
-    int position;
 public:
-    LazySequence(): list() {}
+    LazySequence(): length(0), generator() {}
     LazySequence (data_type* items, int count);
     LazySequence (Sequence<data_type>* seq);
-    LazySequence (data_type(*)(Sequence<data_type>*), Sequence<data_type>)
-    LazySequence (std::function<data_type>(Sequence<data_type>*), Sequence<data_type>*)
+    LazySequence (data_type(*)(Sequence<data_type>*), Sequence<data_type>);
+    LazySequence (std::function<data_type>(Sequence<data_type>*), Sequence<data_type>*);
     Omega GetLength() const{
         return length;
     }
@@ -42,7 +43,7 @@ public:
 
     LazySequence <data_type>*InsertAt(data_type item, int index);
 
-    LazySequence <data_type>* Concat(LazySequence <data_type> *list);
+    //LazySequence <data_type>* Concat(LazySequence <data_type> *list);
 };
 
 #endif
