@@ -30,7 +30,10 @@ public:
     }
 
     data_type Get(int index) {
-
+        while(gen_pos < index) {
+            generator->get_next();
+        }
+        return generator->get_next();
     }
 
     LazySequence <data_type>* GetSubsequence(int startIndex, int endIndex) {
