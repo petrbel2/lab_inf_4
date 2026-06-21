@@ -12,11 +12,12 @@ private:
     Omega length;
     Generator<data_type>* generator;
 public:
-    LazySequence(): length(0), generator() {}
-    LazySequence (data_type* items, int count);
-    LazySequence (Sequence<data_type>* seq);
-    LazySequence (data_type(*)(Sequence<data_type>*), Sequence<data_type>);
-    LazySequence (std::function<data_type>(Sequence<data_type>*), Sequence<data_type>*);
+    //LazySequence(): length(0), generator() {}
+    LazySequence(Generator<data_type>* gen): length(0, 0), generator(gen) {}
+    //LazySequence (data_type* items, int count);
+    //LazySequence (Sequence<data_type>* seq);
+    //LazySequence (data_type(*)(Sequence<data_type>*), Sequence<data_type>);
+    //LazySequence (std::function<data_type>(Sequence<data_type>*), Sequence<data_type>*);
     Omega GetLength() const{
         return length;
     }
@@ -35,13 +36,13 @@ public:
 
     }
 
-    size_t GetMaterializedCount() const;
+    //size_t GetMaterializedCount() const;
 
-    Sequence<data_type>* Append(data_type item);
+    //Sequence<data_type>* Append(data_type item);
 
-    Sequence<data_type>*Prepend(data_type item);
+    //Sequence<data_type>*Prepend(data_type item);
 
-    LazySequence <data_type>*InsertAt(data_type item, int index);
+    //LazySequence <data_type>*InsertAt(data_type item, int index);
 
     //LazySequence <data_type>* Concat(LazySequence <data_type> *list);
 };

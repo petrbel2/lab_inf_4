@@ -3,11 +3,16 @@
 
 class Omega {
 private:
-    int finite;
     int infinite;
+    int finite;
 public:
-    Omega(int num_1, int num_2): finite(num_1), infinite(num_2) {}
-    Omega(): finite(0), infinite(0) {}
+    Omega(int num_1, int num_2): infinite(num_1), finite(num_2) {}
+    Omega(): infinite(0), finite(0) {}
+
+    static Omega finite(int length) { return Omega(0, length); }
+    static Omega infinity() { return Omega(1, 0); }
+    static Omega omega_times(int k) { return Omega(k, 0); }
+    static Omega zero() { return Omega(0, 0); }
 };
 
 #endif
