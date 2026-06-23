@@ -1,6 +1,6 @@
 #ifndef SEQUENCE_H 
 #define SEQUENCE_H
-#include "omega.hpp"
+#include "ordinal.hpp"
 
 template <typename data_type>
 class Sequence
@@ -8,7 +8,7 @@ class Sequence
 public:
     virtual data_type Get(int index) = 0;
 
-    virtual Omega GetLength() const = 0;
+    virtual Ordinal GetLength() const = 0;
 
     //virtual Sequence<data_type>* Append(data_type new_elem) = 0;
     //virtual Sequence<data_type>* Prepend(data_type new_elem) = 0;

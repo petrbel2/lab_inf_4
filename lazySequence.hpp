@@ -1,7 +1,7 @@
 #ifndef LAZYSEQUENCE_H 
 #define LAZYSEQUENCE_H
 #include "sequence.hpp"
-#include "omega.hpp"
+#include "ordinal.hpp"
 #include "generator.hpp"
 #include "cashe.hpp"
 #include <functional>
@@ -21,7 +21,7 @@ public:
     //LazySequence (Sequence<data_type>* seq);
     //LazySequence (data_type(*)(Sequence<data_type>*), Sequence<data_type>);
     //LazySequence (std::function<data_type>(Sequence<data_type>*), Sequence<data_type>*);
-    Omega GetLength() const{
+    Ordinal GetLength() const{
         return length;
     }
 
