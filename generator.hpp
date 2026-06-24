@@ -35,7 +35,7 @@ class SquareGenerator: public Generator<data_type> {
 
         data_type get_next() {
             pos++;
-            return (pos * pos);
+            return ((pos - 1) * (pos - 1));
         }
         
 };

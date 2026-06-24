@@ -36,7 +36,7 @@ public:
             return cache.get(index);
         }
         else {
-            while(gen_pos < (index - 1)) {
+            while(gen_pos < index) {
                 cache.push(generator->get_next());
                 gen_pos++;
             }
@@ -50,7 +50,7 @@ public:
     //}
 
     int GetMaterializedCount() const{
-        cache.get_last_index();
+        return cache.get_last_index();
     }
 
     //Sequence<data_type>* Append(data_type item);
