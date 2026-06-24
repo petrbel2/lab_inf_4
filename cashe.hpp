@@ -41,7 +41,7 @@ class Cache {
         }
 
         bool contains(int logical_index) {
-            if ((first_index <= logical_index) and (logical_index < last_index)) {
+            if ((first_index <= logical_index) and (logical_index <= last_index)) {
                 return true;
             }
             else {

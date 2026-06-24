@@ -13,8 +13,8 @@ private:
     Ordinal length;
     int gen_pos;
     Generator<data_type>* generator;
-    Cache<data_type> cache;
 public:
+    Cache<data_type> cache;
     //LazySequence(): length(0), generator() {}
     LazySequence(Generator<data_type>* gen): length(1, 0), gen_pos(0), generator(gen), cache(10) {}
     //LazySequence (data_type* items, int count);
@@ -50,7 +50,6 @@ public:
     //}
 
     int GetMaterializedCount() const{
-        return 0;
         cache.get_last_index();
     }
 
