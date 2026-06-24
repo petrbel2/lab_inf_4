@@ -10,10 +10,10 @@ template <typename data_type>
 class LazySequence: public Sequence<data_type>
 {
 private:
-    Omega length;
+    Ordinal length;
     int gen_pos;
     Generator<data_type>* generator;
-    Cache<data_type>* cache;
+    Cache<data_type> cache;
 public:
     //LazySequence(): length(0), generator() {}
     LazySequence(Generator<data_type>* gen): length(1, 0), gen_pos(0), generator(gen), cache(10) {}
@@ -32,25 +32,27 @@ public:
     }
 
     data_type Get(int index) {
-        if (cache->contains(index)) {
-            return cache->get(index);
+        if (cache.contains(index)) {
+            return cache.get(index);
         }
         else {
             while(gen_pos < (index - 1)) {
-                cache->push(generator->get_next());
+                cache.push(generator->get_next());
                 gen_pos++;
             }
             data_type result = generator->get_next();
-            cache->push(result);
+            cache.push(result);
             return result;
         }
     }
 
-    LazySequence <data_type>* GetSubsequence(int startIndex, int endIndex) {
+    //LazySequence <data_type>* GetSubsequence(int startIndex, int endIndex) {
+    //}
 
+    int GetMaterializedCount() const{
+        return 0;
+        cache.get_last_index();
     }
-
-    //size_t GetMaterializedCount() const;
 
     //Sequence<data_type>* Append(data_type item);
 

@@ -1,5 +1,5 @@
-#ifndef OMEGA_H
-#define OMEGA_H 
+#ifndef ORDINAL_H
+#define ORDINAL_H 
 
 class Ordinal {
 private:
