@@ -64,8 +64,6 @@ class Cache {
                 last_index++;
             }
         }
-
-        //void clear();
 };
 
 

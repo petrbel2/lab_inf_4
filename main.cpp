@@ -1,6 +1,5 @@
 #include <iostream>
 #include "lazySequence.hpp"
-#include "generator.hpp"
 
 int main() {
     auto square_gen = new SquareGenerator<int>();

@@ -1,10 +1,8 @@
 #ifndef LAZYSEQUENCE_H 
 #define LAZYSEQUENCE_H
 #include "sequence.hpp"
-#include "ordinal.hpp"
 #include "generator.hpp"
 #include "cashe.hpp"
-#include <functional>
 
 template <typename data_type>
 class LazySequence: public Sequence<data_type>

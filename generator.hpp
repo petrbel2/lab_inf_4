@@ -1,8 +1,6 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include <functional>
-
 template<typename data_type>
 class Generator {
     public:
