@@ -23,6 +23,34 @@ public:
     bool operator==(const Ordinal& other) const {
             return infinite == other.infinite && finite == other.finite;
         }
+
+    Ordinal* operator++(int) {
+            this->finite++;
+            return this;
+        }
+
+    bool operator!=(const Ordinal &other) const {
+            return !(*this == other);
+        }
+
+    bool operator<(const Ordinal &other) const {
+        if (infinite != other.infinite) {
+            return infinite < other.infinite;
+        }
+        return finite < other.finite;
+    }
+
+    bool operator<=(const Ordinal &other) const {
+        return *this < other || *this == other;
+    }
+
+    bool operator>(const Ordinal &other) const {
+        return other < *this;
+    }
+
+    bool operator>=(const Ordinal &other) const {
+        return other <= *this;
+    }
 };
 
 #endif

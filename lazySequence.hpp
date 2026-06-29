@@ -27,6 +27,18 @@ public:
     }
 
     data_type GetLast() {
+        if (length.get_finite() == 0) {
+        //
+            return 0;
+        }
+        else {
+            if (cache.contains(length)) {
+            return cache.get(length);
+            }
+            else {
+                generator.get(length);
+            }
+        }
     }
 
     data_type Get(int index) {
@@ -42,6 +54,7 @@ public:
             cache.push(result);
             return result;
         }
+        // создать ошибку для перескока
     }
 
     //LazySequence <data_type>* GetSubsequence(int startIndex, int endIndex) {
