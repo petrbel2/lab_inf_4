@@ -7,7 +7,7 @@ class Generator {
     public:
         virtual Ordinal position() const = 0;
         virtual bool has_next() const = 0;
-        virtual data_type get() = 0;
+        virtual data_type get(Ordinal elem_position) = 0;
         virtual data_type get_next() = 0;
 
         //virtual Ordinal estimate_remaining() const { return Omega::infinity(); } 
@@ -37,7 +37,7 @@ class SquareGenerator: public Generator<data_type> {
             return clone_gen;
         }
 
-        data_type get() {
+        data_type get(Ordinal elem_position) {
             return 0;
             //its mistake
         }
@@ -60,33 +60,126 @@ class AppendGenerator: public Generator<data_type> {
     public:
         AppendGenerator(Ordinal elem_pos, data_type elem, Generator<data_type>* base_gen): length(elem_pos), pos(0, 0), elem(elem), base(base_gen) {}
 
-        bool has_next() {
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+
+        data_type get(Ordinal elem_position) {
             if (pos < length) {
-                return true;
+                return base->get(elem_position);
+            }
+            else if (pos == length) {
+                return elem;
             }
             else {
-                return false;
+                std::cout<<"YOU DUMB MOTHERFUCKER";
+                return 0;
             }
         }
+
         data_type get_next() {
-            if this.has_next() {
-                
+            if (pos < length) {
+                pos++;
+                return base->get_next();
+            } else if (pos == length) {
+                pos++;
+                return elem;
             }
+            return elem; 
         }
-        AppendGenerator<data_type>* clone() {}
+
+        AppendGenerator* clone() const {
+            return new AppendGenerator(length, elem, base->clone());
+        }
 }; 
 
 template <typename data_type>
 class PrependGenerator: public Generator<data_type> {
     private:
+        Ordinal length;
+        Ordinal pos;
         data_type elem;
         Generator<data_type>* base;
     public:
-        PrependGenerator(data_type elem, Generator<data_type>* base_gen): elem(elem), base(base_gen) {}
+        PrependGenerator(Ordinal length, data_type elem, Generator<data_type>* base_gen): length(length), pos(0, 0), elem(elem), base(base_gen) {}
         
-        bool has_next() {}
-        data_type get_next() {}
-        PrependGenerator<data_type>* clone() {}
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+
+        data_type get(Ordinal elem_position) {
+            if (pos == pos.finity(0)) {
+                return elem;
+            } else {
+                return base->get(elem_position);
+            }
+            //mistake
+        }
+
+        data_type get_next() {
+            if (this->has_next()) {
+                return base->get_next();
+            }
+            else {
+                return 0;
+                //mistake
+            }
+        }
+
+        PrependGenerator* clone() const {
+            return new PrependGenerator(length, elem, base->clone());
+        }
+};
+
+template <typename data_type>
+class InsertGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        Ordinal elem_pos;
+        data_type elem;
+        Generator<data_type>* base;
+    public:
+        InsertGenerator(Ordinal length, Ordinal elem_pos, data_type elem, Generator<data_type>* base_gen): length(length), pos(0, 0), elem_pos(elem_pos), elem(elem), base(base_gen) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+
+        data_type get(Ordinal elem_position) {
+            if (pos == elem_pos) {
+                return elem;
+            } else {
+                return base->get(elem_position);
+            }
+            //mistake
+        }
+
+        data_type get_next() {
+            if (this->has_next()) {
+                return base->get_next();
+            }
+            else {
+                return 0;
+                //mistake
+            }
+        }
+
+        InsertGenerator* clone() const {
+            return new InsertGenerator(length, elem, base->clone());
+        }
 };
 
 #endif

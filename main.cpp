@@ -7,6 +7,7 @@ int main() {
     LazySequence<int> test_sequence(square_gen);
 
     std::cout<<test_sequence.Get(5)<<"\n";
+    test_sequence.Append(90);
 
     std::cout<<test_sequence.cache.get(0)<<"\n";
     std::cout<<test_sequence.cache.get(1)<<"\n";

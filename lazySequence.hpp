@@ -64,11 +64,23 @@ public:
         return cache.get_last_index();
     }
 
-    //Sequence<data_type>* Append(data_type item);
+    LazySequence<data_type>* Append(data_type item) {
+        length++;
+        generator = new AppendGenerator(length, item, generator);
+        return this;
+    }
 
-    //Sequence<data_type>* Prepend(data_type item);
+    Sequence<data_type>* Prepend(data_type item) {
+        length++;
+        generator = new PrependGenerator(length, item, generator);
+        return this;
+    }
 
-    //LazySequence<data_type>* InsertAt(data_type item, int index);
+    LazySequence<data_type>* InsertAt(data_type item, int index) {
+        length++;
+        generator = new InsertGenerator(length, index, item, generator);
+        return this;
+    }
 
     //LazySequence<data_type>* Concat(LazySequence <data_type> *list);
 
