@@ -36,7 +36,7 @@ public:
                 return cache.get(length);
             }
             else {
-                generator.get(length);
+                generator->get(length);
             }
         }
     }

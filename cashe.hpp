@@ -1,6 +1,7 @@
 #ifndef CASH_H 
 #define CASH_H
 #include "dynamicArray.hpp"
+#include "ordinal.hpp"
 
 template <typename data_type>
 class Cache {
@@ -8,10 +9,10 @@ class Cache {
         DynamicArray<data_type> buffer;
         int capacity;
         int count;
-        int first_index; 
-        int last_index; 
+        Ordinal first_index; 
+        Ordinal last_index; 
     public:
-        Cache(int cap): buffer(cap), capacity(cap), count(0), first_index(-1), last_index(0) {}
+        Cache(int cap): buffer(cap), capacity(cap), count(0), first_index(0, -1), last_index(0, 0) {}
 
         bool is_empty() {
             if (count == 0) {
@@ -23,12 +24,12 @@ class Cache {
         }
 
         data_type get(int logical_index) {
-            return buffer.Get(logical_index - first_index);
+            return buffer.Get(logical_index - first_index.get_finite());
         }
 
-        //data_type get(int logical_index) {
-        //    return buffer.Get(logical_index - first_index);
-        //}
+        data_type get(Ordinal logical_index) {
+            return buffer.Get(logical_index.get_finite() - first_index.get_finite());
+        }
 
         int get_count() {
             return count;
@@ -37,14 +38,25 @@ class Cache {
             return capacity;
         } 
 
-        int get_first_index() {
+        Ordinal get_first_index() {
             return first_index;
         }
-        int get_last_index() {
+        Ordinal get_last_index() {
             return last_index;
         }
 
-        bool contains(int logical_index) {
+        bool contains(int l_index) {
+            //Ordinal logical_index = finity(l_index);
+            Ordinal logical_index(0, l_index);
+            if ((first_index <= logical_index) and (logical_index <= last_index)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        bool contains(Ordinal logical_index) {
             if ((first_index <= logical_index) and (logical_index <= last_index)) {
                 return true;
             }
