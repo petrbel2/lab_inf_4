@@ -26,6 +26,10 @@ class Cache {
             return buffer.Get(logical_index - first_index);
         }
 
+        //data_type get(int logical_index) {
+        //    return buffer.Get(logical_index - first_index);
+        //}
+
         int get_count() {
             return count;
         }

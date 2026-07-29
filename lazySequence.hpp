@@ -33,7 +33,7 @@ public:
         }
         else {
             if (cache.contains(length)) {
-            return cache.get(length);
+                return cache.get(length);
             }
             else {
                 generator.get(length);

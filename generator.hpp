@@ -46,9 +46,43 @@ class SquareGenerator: public Generator<data_type> {
             pos++;
             return ((pos.get_finite() - 1) * (pos.get_finite() - 1));
         }
-        
 };
 
+template<typename data_type>
+class FibonaccyGenerator: public Generator<data_type> {
+    private:
+        Ordinal pos;
+        data_type b_1;
+        data_type b_2;
+    public:
+        FibonaccyGenerator(): pos(0, 0), b_1(1), b_2(1) {}
+
+        Ordinal position() const{
+            return pos;
+        }
+
+        bool has_next() const{
+            return true;
+        }
+
+        Generator<data_type>* clone() const{
+            FibonaccyGenerator<data_type>* clone_gen = new FibonaccyGenerator<data_type>();
+            return clone_gen;
+        }
+
+        data_type get(Ordinal elem_position) {
+            return 0;
+            //its mistake
+        }
+
+        data_type get_next() {
+            pos++;
+            data_type result = b_1 + b_2;
+            b_1 = b_2;
+            b_2 = result;
+            return result;
+        }
+};
 
 template <typename data_type>
 class AppendGenerator: public Generator<data_type> {
