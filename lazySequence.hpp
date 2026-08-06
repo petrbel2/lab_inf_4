@@ -28,7 +28,6 @@ public:
 
     data_type GetLast() {
         if (length.get_finite() == 0) {
-        //
             return 0;
         }
         else {
@@ -36,11 +35,11 @@ public:
                 return cache.get(length);
             }
             else {
-                generator->get(length);
-            }
+                return generator->get(length);
+            } 
         }
     }
-
+ 
     data_type Get(int index) {
         if (cache.contains(index)) {
             return cache.get(index);

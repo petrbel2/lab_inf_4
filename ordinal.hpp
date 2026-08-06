@@ -24,10 +24,7 @@ public:
             return infinite == other.infinite && finite == other.finite;
         }
 
-    Ordinal* operator++(int) {
-            this->finite++;
-            return this;
-        }
+    Ordinal operator++(int) { Ordinal old = *this; this->finite++; return old; }
 
     bool operator!=(const Ordinal &other) const {
             return !(*this == other);

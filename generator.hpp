@@ -103,6 +103,10 @@ class AppendGenerator: public Generator<data_type> {
         }
 
         data_type get(Ordinal elem_position) {
+            if (elem_position == length) {
+                return elem;
+            }
+            else {
             if (pos < length) {
                 return base->get(elem_position);
             }
@@ -112,6 +116,7 @@ class AppendGenerator: public Generator<data_type> {
             else {
                 std::cout<<"YOU DUMB MOTHERFUCKER";
                 return 0;
+            }
             }
         }
 

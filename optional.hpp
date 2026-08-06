@@ -7,8 +7,8 @@ template <typename data_type> class Optional {
         bool if_value;
 
     public:
-        Option() : if_value(false) {}
-        Option(T initial_value) : value(initial_value), if_value(true) {}
+        Optional() : if_value(false) {}
+        Optional(T initial_value) : value(initial_value), if_value(true) {}
 
         bool has_value() const {
             return if_value;
@@ -41,11 +41,11 @@ template <typename data_type> class Optional {
 
         void set_value(data_type new_value) {
             value = new_value;
-            contains_value = true;
+            if_value = true;
         }
 
         void reset() {
-            contains_value = false;
+            if_value = false;
         }
 };
 
