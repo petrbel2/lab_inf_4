@@ -10,11 +10,11 @@ int main() {
     test_sequence.Append(90);
 
     std::cout<<test_sequence.Get(0)<<"\n";
-    std::cout<<test_sequence.cache.get(1)<<"\n";
-    std::cout<<test_sequence.cache.get(2)<<"\n";
-    std::cout<<test_sequence.cache.get(3)<<"\n";
-    std::cout<<test_sequence.cache.get(4)<<"\n";
-    std::cout<<test_sequence.cache.get(5)<<"\n";
+    std::cout<<test_sequence.Get(1)<<"\n";
+    std::cout<<test_sequence.Get(2)<<"\n";
+    std::cout<<test_sequence.Get(3)<<"\n";
+    std::cout<<test_sequence.Get(4)<<"\n";
+    std::cout<<test_sequence.Get(5)<<"\n";
 
     std::cout<<test_sequence.GetLast()<<"\n";
 }
