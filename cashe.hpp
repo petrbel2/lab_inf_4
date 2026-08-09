@@ -12,7 +12,7 @@ class Cache {
         Ordinal first_index; 
         Ordinal last_index; 
     public:
-        Cache(int cap): buffer(cap), capacity(cap), count(0), first_index(0, -1), last_index(0, 0) {}
+        Cache(int cap): buffer(cap), capacity(cap), count(0), first_index(0, 0), last_index(0, 0) {}
 
         bool is_empty() {
             if (count == 0) {
@@ -67,9 +67,9 @@ class Cache {
 
         void push(data_type item) {
             if (count < capacity) {
-                count++;
                 last_index++;
                 buffer.Set(count, item);
+                count++;
             }
             else {
                 for (int i = 0; i < (capacity - 1); i++) {
