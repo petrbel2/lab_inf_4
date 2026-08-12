@@ -5,7 +5,11 @@
 int main() {
     int big_counter; 
     big_counter = test_cache();
-    std::cout<<"Cache testing. successful tests "<<big_counter<<" out of 3\n";
+    std::cout<<"Cache testing. successful tests "<<big_counter<<" out of 8\n";
+    big_counter = test_ordinal();
+    std::cout<<"Cache testing. successful tests "<<big_counter<<" out of 8\n";
+    big_counter = test_optional();
+    std::cout<<"Cache testing. successful tests "<<big_counter<<" out of 1\n";
     /*
     auto square_gen = new SquareGenerator<int>();
     
