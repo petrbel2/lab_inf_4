@@ -55,7 +55,7 @@ class FibonaccyGenerator: public Generator<data_type> {
         data_type b_1;
         data_type b_2;
     public:
-        FibonaccyGenerator(): pos(0, 0), b_1(1), b_2(1) {}
+        FibonaccyGenerator(): pos(0, 0), b_1(1), b_2(0) {}
 
         Ordinal position() const{
             return pos;

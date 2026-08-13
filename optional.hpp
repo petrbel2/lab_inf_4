@@ -8,7 +8,7 @@ template <typename data_type> class Optional {
 
     public:
         Optional() : if_value(false) {}
-        Optional(T initial_value) : value(initial_value), if_value(true) {}
+        Optional(data_type initial_value) : value(initial_value), if_value(true) {}
 
         bool has_value() const {
             return if_value;

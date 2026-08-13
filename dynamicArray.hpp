@@ -32,7 +32,8 @@ public:
 
     DynamicArray () {
         length = 0;
-        data = new data_type[0];
+        data = new data_type[5];
+        supply = 5;
     }
 
     DynamicArray(DynamicArray<data_type> &dynamicArray) {
@@ -41,6 +42,7 @@ public:
         for (int i = 0; i < length; i++) {
             data[i] = dynamicArray.data[i];
         }
+        supply = dynamicArray.GetSupply();
     }
 
     data_type Get(int index) {
@@ -49,6 +51,10 @@ public:
 
     int GetLength() {
         return length;
+    }
+
+    int GetSupply() {
+        return supply;
     }
 
     void Set(int count, data_type item) {

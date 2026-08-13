@@ -24,6 +24,7 @@ public:
     }
 
     data_type GetFirst() {
+        return this->Get(0);
     }
 
     data_type GetLast() {
