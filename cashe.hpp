@@ -46,7 +46,6 @@ class Cache {
         }
 
         bool contains(int l_index) {
-            //Ordinal logical_index = finity(l_index);
             Ordinal logical_index(0, l_index);
             if ((first_index <= logical_index) and (logical_index < last_index)) {
                 return true;

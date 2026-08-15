@@ -217,7 +217,7 @@ class InsertGenerator: public Generator<data_type> {
         }
 
         InsertGenerator* clone() const {
-            return new InsertGenerator(length, elem, base->clone());
+            return new InsertGenerator(length, elem_pos, elem, base->clone());
         }
 };
 

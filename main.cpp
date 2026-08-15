@@ -16,17 +16,29 @@ int main() {
     
     LazySequence<int> test_sequence(square_gen);
 
-    std::cout<<test_sequence.Get(5)<<"\n";
+   //std::cout<<test_sequence.Get(5)<<"\n";
     test_sequence.Append(90);
+    test_sequence.Prepend(40);
+    test_sequence.InsertAt(60, 3);
 
-    std::cout<<test_sequence.Get(0)<<"\n";
-    std::cout<<test_sequence.Get(1)<<"\n";
-    std::cout<<test_sequence.Get(2)<<"\n";
-    std::cout<<test_sequence.Get(3)<<"\n";
-    std::cout<<test_sequence.Get(4)<<"\n";
-    std::cout<<test_sequence.Get(5)<<"\n";
+    //std::cout<<test_sequence.GetLength().get_finite();
+    //std::cout<<test_sequence.GetLength().get_infinite();
+    //std::cout<<test_sequence.Get(0)<<"\n";
+    //std::cout<<test_sequence.Get(1)<<"\n";
+    //std::cout<<test_sequence.Get(2)<<"\n";
+    //std::cout<<test_sequence.Get(3)<<"\n";
+    //std::cout<<test_sequence.Get(4)<<"\n";
+    //std::cout<<test_sequence.Get(5)<<"\n";
 
     std::cout<<test_sequence.GetLast()<<"\n";
+    std::cout<<test_sequence.GetFirst()<<"\n";
+    std::cout<<test_sequence.Get(3)<<"\n";
+    std::cout<<test_sequence.Get(3)<<"\n";
+    std::cout<<test_sequence.Get(0)<<"\n";
+    std::cout<<test_sequence.Get(1)<<"\n";
+    std::cout<<test_sequence.Get(4)<<"\n";
+    std::cout<<test_sequence.Get(5)<<"\n";
+    
     
 }
 //    std::cout<<test_sequence.GetLength().get_infinite()<<"\n";std::cout<<test_sequence.GetLength().get_finite()<<"\n";

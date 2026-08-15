@@ -29,7 +29,7 @@ public:
 
     data_type GetLast() {
         if (length.get_finite() == 0) {
-            return 0;
+            return -1000;
         }
         else {
             if (cache.contains(length)) {
@@ -52,6 +52,7 @@ public:
             }
             data_type result = generator->get_next();
             cache.push(result);
+            gen_pos++;
             return result;
         }
         // создать ошибку для перескока
@@ -77,6 +78,13 @@ public:
     }
 
     LazySequence<data_type>* InsertAt(data_type item, int index) {
+        length++;
+        Ordinal new_index(0, index);
+        generator = new InsertGenerator(length, new_index, item, generator);
+        return this;
+    }
+
+    LazySequence<data_type>* InsertAt(data_type item, Ordinal index) {
         length++;
         generator = new InsertGenerator(length, index, item, generator);
         return this;
