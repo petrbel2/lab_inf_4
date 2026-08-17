@@ -155,7 +155,7 @@ class PrependGenerator: public Generator<data_type> {
         }
 
         data_type get(Ordinal elem_position) {
-            if (pos == pos.finity(0)) {
+            if (elem_position == pos.finity(0)) {
                 return elem;
             } else {
                 return base->get(elem_position);
@@ -164,12 +164,19 @@ class PrependGenerator: public Generator<data_type> {
         }
 
         data_type get_next() {
-            if (this->has_next()) {
-                return base->get_next();
+            if (pos == pos.finity(0)) {
+                pos++;
+                return elem;
             }
             else {
-                return 0;
-                //mistake
+                if (this->has_next()) {
+                    pos++;
+                    return base->get_next();
+                }
+                else {
+                    return 0;
+                    //mistake
+                }
             }
         }
 
@@ -198,7 +205,7 @@ class InsertGenerator: public Generator<data_type> {
         }
 
         data_type get(Ordinal elem_position) {
-            if (pos == elem_pos) {
+            if (elem_position == elem_pos) {
                 return elem;
             } else {
                 return base->get(elem_position);
