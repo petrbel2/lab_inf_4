@@ -214,6 +214,11 @@ class InsertGenerator: public Generator<data_type> {
         }
 
         data_type get_next() {
+            std::cout<<pos.get_infinite()<<"   ";
+            std::cout<<pos.get_finite()<<"\n";
+            if (pos == elem_pos) {
+                return elem;
+            }
             if (this->has_next()) {
                 return base->get_next();
             }
