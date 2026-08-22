@@ -2,8 +2,7 @@
 #include "lazySequence.hpp"
 #include "tests.hpp"
 
-int main() {
-    /*
+int main() {  
     int big_counter; 
     big_counter = test_cache();
     std::cout<<"Cache testing. successful tests "<<big_counter<<" out of 8\n";
@@ -11,7 +10,6 @@ int main() {
     std::cout<<"Ordinal testing. successful tests "<<big_counter<<" out of 8\n";
     big_counter = test_optional();
     std::cout<<"Optional testing. successful tests "<<big_counter<<" out of 1\n";
-    */
     auto square_gen = new SquareGenerator<int>();
     
     LazySequence<int> test_sequence(square_gen);

@@ -2,7 +2,7 @@
 #define LAZYSEQUENCE_H
 #include "sequence.hpp"
 #include "generator.hpp"
-#include "cashe.hpp"
+#include "cache.hpp"
 
 template <typename data_type>
 class LazySequence: public Sequence<data_type>

@@ -9,81 +9,80 @@ int test_cache() {
     try {
         result = t_cache.get_capacity();
         if (result != 10) {
-            throw "Shit!";
+            throw std::runtime_error("Incorrect cache capacity in test_cache!\n");
         }
         good_counter++;
     }
-    catch(const char* error_message) {
-        std::cout<<error_message;
+    catch(const std::runtime_error& error) {
+        std::cout<<error.what();
     }
     try {
         result = t_cache.get_count();
         if (result != 0) {
-            throw "Shit!";
+            throw std::runtime_error("Incorrect get_count function result in test_cache!\n");
         }
         good_counter++;
     }
-    catch(const char* error_message) {
-        std::cout<<error_message;
+    catch(const std::runtime_error& error) {
+        std::cout<<error.what();
     }
     try {
         result = t_cache.is_empty();
         if (not result) {
-            throw "Shit!";
+            throw std::runtime_error("Incorrect is_empty function result in test_cache!\n");
         }
         good_counter++;
     }
-    catch(const char* error_message) {
-        std::cout<<error_message;
+    catch(const std::runtime_error& error) {
+        std::cout<<error.what();
     }
-    
     try {
         t_cache.push(5);
         good_counter++;
     }
-    catch(const char* error_message) {
-        std::cout<<error_message;
+    catch(const std::runtime_error& error) {
+        std::cout<<error.what();
     }
     try {
         result = t_cache.get_count();
         if (result != 1) {
-            throw "Shit!";
+            throw std::runtime_error("Incorrect get_count function result in test_cache!\n");
         }
         good_counter++;
     }
-    catch(const char* error_message) {
-        std::cout<<error_message;
+    catch(const std::runtime_error& error) {
+        std::cout<<error.what();
     }
     try {
         result = t_cache.is_empty();
         if (result) {
-            throw "Shit!";
+            throw std::runtime_error("Incorrect is_empty function result in test_cache!\n");
         }
         good_counter++;
     }
-    catch(const char* error_message) {
-        std::cout<<error_message;
+    catch(const std::runtime_error& error) {
+        std::cout<<error.what();
     }
     try {
         result = t_cache.get(0);
         if (result != 5) {
-            throw "Shit!";
+            throw std::runtime_error("Invalide value got from get(int) function in test_cache!\n");
         }
         good_counter++;
     }
-    catch(const char* error_message) {
-        std::cout<<error_message;
+    catch(const std::runtime_error& error) {
+        std::cout<<error.what();
     }
     Ordinal number(0, 0);
     try {
         result = t_cache.get(number);
         if (result != 5) {
-            throw "Shit!";
+            throw std::runtime_error("Invalide value got from get(Ordinal) function in test_cache!\n");
         }
         good_counter++;
     }
-    catch(const char* error_message) {
-        std::cout<<error_message;
+    catch(const std::runtime_error& error) {
+        std::cout<<error.what();
     }
     return good_counter;
 }
