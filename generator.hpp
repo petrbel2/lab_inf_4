@@ -38,8 +38,12 @@ class SquareGenerator: public Generator<data_type> {
         }
 
         data_type get(Ordinal elem_position) {
-            return 0;
-            //its mistake
+            if (elem_position.get_infinite() or elem_position.get_finite() < 0) {
+                return 0; //mistake
+            }
+            else {
+                return(elem_position.get_finite() * elem_position.get_finite());
+            }
         }
 
         data_type get_next() {
@@ -71,8 +75,16 @@ class FibonaccyGenerator: public Generator<data_type> {
         }
 
         data_type get(Ordinal elem_position) {
-            return 0;
-            //its mistake
+            if (elem_position.get_infinite() or (elem_position.get_finite() < pos.get_finite())) {
+                return 0; //mistake
+            }
+            else {
+                data_type getresult;
+                while (elem_position.get_finite() > pos.get_finite()) {
+                    getresult = get_next();
+                }
+                return getresult;
+            }
         }
 
         data_type get_next() {
@@ -108,6 +120,7 @@ class AppendGenerator: public Generator<data_type> {
             }
             else {
             if (pos < length) {
+                pos = elem_position;
                 return base->get(elem_position);
             }
             else if (pos == length) {
@@ -158,6 +171,7 @@ class PrependGenerator: public Generator<data_type> {
             if (elem_position == pos.finity(0)) {
                 return elem;
             } else {
+                pos = elem_position;
                 return base->get(elem_position);
             }
             //mistake
@@ -208,18 +222,19 @@ class InsertGenerator: public Generator<data_type> {
             if (elem_position == elem_pos) {
                 return elem;
             } else {
+                pos = elem_position;
                 return base->get(elem_position);
             }
             //mistake
         }
 
         data_type get_next() {
-            std::cout<<pos.get_infinite()<<"   ";
-            std::cout<<pos.get_finite()<<"\n";
             if (pos == elem_pos) {
+                pos++;
                 return elem;
             }
             if (this->has_next()) {
+                pos++;
                 return base->get_next();
             }
             else {
