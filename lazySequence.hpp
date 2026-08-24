@@ -65,10 +65,6 @@ public:
         return cache.get_last_index();
     }
 
-    Generator<data_type>* GetGen() const{
-        return generator;
-    }
-
     LazySequence<data_type>* Append(data_type item) {
         length++;
         generator = new AppendGenerator(length, item, generator);

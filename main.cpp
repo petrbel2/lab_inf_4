@@ -18,7 +18,6 @@ int main() {
     test_sequence.Append(90);
     test_sequence.Prepend(40);
     test_sequence.InsertAt(60, 3);
-    //std::cout<<test_sequence.GetGen()->position().get_infinite()<<"\n";
     /*
     std::cout<<test_sequence.GetLength().get_infinite()<<" ";
     std::cout<<test_sequence.GetLength().get_finite()<<"\n";
