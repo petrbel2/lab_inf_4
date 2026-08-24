@@ -220,6 +220,7 @@ class InsertGenerator: public Generator<data_type> {
 
         data_type get(Ordinal elem_position) {
             if (elem_position == elem_pos) {
+                pos = elem_position;
                 return elem;
             } else {
                 pos = elem_position;
@@ -245,6 +246,143 @@ class InsertGenerator: public Generator<data_type> {
 
         InsertGenerator* clone() const {
             return new InsertGenerator(length, elem_pos, elem, base->clone());
+        }
+};
+
+template <typename data_type>
+class RemoveGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        Ordinal elem_pos;
+        Generator<data_type>* base;
+    public:
+        RemoveGenerator(Ordinal length, Ordinal elem_pos, Generator<data_type>* base_gen): length(length), pos(0, 0), elem_pos(elem_pos), base(base_gen) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+
+        data_type get(Ordinal elem_position) {
+            if (elem_position == elem_pos and this->has_next()) {
+                pos++;
+                base->get_next();
+                pos++;
+                return base->get_next();
+            } else {
+                return 0;//mistake
+                //pos = elem_position;
+                //return base->get(elem_position);
+            }
+            //mistake
+        }
+
+        data_type get_next() {
+            if (pos == elem_pos and this->has_next()) {
+                pos++;
+                base->get_next();
+            }
+            if (this->has_next()) {
+                pos++;
+                return base->get_next();
+            }
+            else {
+                return 0;
+                //mistake
+            }
+        }
+
+        RemoveGenerator* clone() const {
+            return new RemoveGenerator(length, elem_pos, base->clone());
+        }
+};
+
+template <typename data_type>
+class MapGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        data_type(*func)(data_type);
+        Generator<data_type>* base;
+    public:
+        MapGenerator(Ordinal length, data_type(*func)(data_type), Generator<data_type>* base_gen): length(length), pos(0, 0), func(func), base(base_gen) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+
+        data_type get(Ordinal elem_position) {
+            pos = elem_position;
+            return func(base->get(elem_position));
+            //mistake
+        }
+
+        data_type get_next() {
+            if (this->has_next()) {
+                pos++;
+                return func(base->get_next());
+            }
+            else {
+                return 0;
+                //mistake
+            }
+        }
+
+        MapGenerator* clone() const {
+            return new MapGenerator(length, func, base->clone());
+        }
+};
+
+template <typename data_type>
+class WhereGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        bool(*func)(data_type);
+        Generator<data_type>* base;
+    public:
+        WhereGenerator(Ordinal length, bool(*func)(data_type), Generator<data_type>* base_gen): length(length), pos(0, 0), func(func), base(base_gen) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+
+        data_type get(Ordinal elem_position) {
+            return 0;
+            //mistake
+        }
+
+        data_type get_next() {
+            bool flag = false;
+            data_type result;
+            while (not flag) {
+                if (base->has_next()) {
+                    pos++;
+                    result = base->get_next();
+                    flag = func(result);
+                }
+                else {
+                    return 0;
+                    //mistake
+                }
+            }
+            return result;
+        }
+
+        WhereGenerator* clone() const {
+            return new WhereGenerator(length, func, base->clone());
         }
 };
 

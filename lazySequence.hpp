@@ -88,11 +88,22 @@ public:
         return this;
     }
 
-    LazySequence<data_type>* InsertAt(data_type item, Ordinal index) {
-        if (length.get_infinite() <= index.get_infinite()) {
-        length++;
+    LazySequence<data_type>* Remove(int index) {
+        Ordinal new_index(0, index);
+        if (length.get_infinite() == 0) {
+        length--;
         }
-        generator = new InsertGenerator(length, index, item, generator);
+        generator = new RemoveGenerator(length, new_index, generator);
+        return this;
+    }
+
+    LazySequence<data_type>* Map(data_type(*func)(data_type)) {
+        generator = new MapGenerator(length, func, generator);
+        return this;
+    }
+
+    LazySequence<data_type>* Where(bool(*func)(data_type)) {
+        generator = new WhereGenerator(length, func, generator);
         return this;
     }
 

@@ -26,6 +26,8 @@ public:
 
     Ordinal operator++(int) { Ordinal old = *this; this->finite++; return old; }
 
+    Ordinal operator--(int) { Ordinal old = *this; this->finite--; return old; }
+
     bool operator!=(const Ordinal &other) const {
             return !(*this == other);
         }
