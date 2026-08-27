@@ -13,9 +13,13 @@ private:
     Generator<data_type>* generator;
     Cache<data_type> cache;
 public:
-    LazySequence(): length(0, 0), gen_pos(0), generator(), cache(0) {}
+    LazySequence(): length(0, 0), gen_pos(0), generator(), cache(10) {}
     LazySequence(Generator<data_type>* gen): length(1, 0), gen_pos(0), generator(gen), cache(10) {}
-    //LazySequence (data_type* items, int count);
+    LazySequence (data_type* items, int count): length(0, count), gen_pos(0), generator(), cache(10) {
+        for (int i = 0; i < count; i++) {
+            this->Append(items[i]);
+        }
+    }
     //LazySequence (Sequence<data_type>* seq);
     //LazySequence (data_type(*)(Sequence<data_type>*), Sequence<data_type>);
     //LazySequence (std::function<data_type>(Sequence<data_type>*), Sequence<data_type>*);
@@ -29,21 +33,27 @@ public:
 
     data_type GetLast() {
         if (length.get_finite() == 0) {
-            return -1000;
+            throw std::logic_error("Sequence doesn't have a last element");
         }
         else {
-            if (cache.contains(length)) {
-                return cache.get(length);
+            if (cache.contains(Ordinal(length.get_infinite(), length.get_finite() - 1))) {
+                return cache.get(Ordinal(length.get_infinite(), length.get_finite() - 1));
             }
             else {
-                return generator->get(length);
+                return generator->get(Ordinal(length.get_infinite(), length.get_finite() - 1));
             } 
         }
     }
  
     data_type Get(int index) {
-        if (cache.contains(index)) {
+        if (length.get_finite() <= index and length.get_infinite() == 0) {
+            throw std::logic_error("Index greater than length");
+        }
+        else if (cache.contains(index)) {
             return cache.get(index);
+        }
+        else if (index < gen_pos) {
+            throw std::logic_error("Index passed and deleted from cache");
         }
         else {
             while(gen_pos < index) {
@@ -55,7 +65,6 @@ public:
             gen_pos++;
             return result;
         }
-        // создать ошибку для перескока
     }
 
     //LazySequence <data_type>* GetSubsequence(int startIndex, int endIndex) {

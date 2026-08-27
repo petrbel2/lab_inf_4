@@ -39,7 +39,7 @@ class SquareGenerator: public Generator<data_type> {
 
         data_type get(Ordinal elem_position) {
             if (elem_position.get_infinite() or elem_position.get_finite() < 0) {
-                return 0; //mistake
+                return -731; //mistake
             }
             else {
                 return(elem_position.get_finite() * elem_position.get_finite());
@@ -115,11 +115,11 @@ class AppendGenerator: public Generator<data_type> {
         }
 
         data_type get(Ordinal elem_position) {
-            if (elem_position == (length - Ordinal::finity(1))) {
+            if (elem_position == (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 return elem;
             }
             else {
-            if (pos < (length - Ordinal::finity(1))) {
+            if (pos < (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 pos = elem_position;
                 return base->get(elem_position);
             }
@@ -128,16 +128,16 @@ class AppendGenerator: public Generator<data_type> {
             }
             else {
                 std::cout<<"YOU DUMB MOTHERFUCKER";
-                return 0;
+                return -42;
             }
             }
         }
 
         data_type get_next() {
-            if (pos < (length - Ordinal::finity(1))) {
+            if (pos < (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 pos++;
                 return base->get_next();
-            } else if (pos == (length - Ordinal::finity(1))) {
+            } else if (pos == (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 pos++;
                 return elem;
             }
@@ -188,7 +188,7 @@ class PrependGenerator: public Generator<data_type> {
                     return base->get_next();
                 }
                 else {
-                    return 0;
+                    return -100;
                     //mistake
                 }
             }
@@ -239,7 +239,7 @@ class InsertGenerator: public Generator<data_type> {
                 return base->get_next();
             }
             else {
-                return 0;
+                return -666;
                 //mistake
             }
         }
@@ -274,7 +274,7 @@ class RemoveGenerator: public Generator<data_type> {
                 pos++;
                 return base->get_next();
             } else {
-                return 0;//mistake
+                return -69;//mistake
                 //pos = elem_position;
                 //return base->get(elem_position);
             }
@@ -291,7 +291,7 @@ class RemoveGenerator: public Generator<data_type> {
                 return base->get_next();
             }
             else {
-                return 0;
+                return -67;
                 //mistake
             }
         }
@@ -331,7 +331,7 @@ class MapGenerator: public Generator<data_type> {
                 return func(base->get_next());
             }
             else {
-                return 0;
+                return -68;
                 //mistake
             }
         }
