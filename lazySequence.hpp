@@ -13,7 +13,7 @@ private:
     Generator<data_type>* generator;
     Cache<data_type> cache;
 public:
-    //LazySequence(): length(0), generator() {}
+    LazySequence(): length(0, 0), gen_pos(0), generator(), cache(0) {}
     LazySequence(Generator<data_type>* gen): length(1, 0), gen_pos(0), generator(gen), cache(10) {}
     //LazySequence (data_type* items, int count);
     //LazySequence (Sequence<data_type>* seq);
