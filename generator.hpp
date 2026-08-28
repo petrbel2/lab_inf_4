@@ -36,7 +36,7 @@ class SquareGenerator: public Generator<data_type> {
             SquareGenerator<data_type>* clone_gen = new SquareGenerator<data_type>();
             return clone_gen;
         }
-
+        
         data_type get(Ordinal elem_position) {
             if (elem_position.get_infinite() or elem_position.get_finite() < 0) {
                 return -731; //mistake
@@ -73,7 +73,7 @@ class FibonaccyGenerator: public Generator<data_type> {
             FibonaccyGenerator<data_type>* clone_gen = new FibonaccyGenerator<data_type>();
             return clone_gen;
         }
-
+        
         data_type get(Ordinal elem_position) {
             if (elem_position.get_infinite() or (elem_position.get_finite() < pos.get_finite())) {
                 return 0; //mistake
@@ -113,7 +113,7 @@ class AppendGenerator: public Generator<data_type> {
         bool has_next() const {
             return pos <= length;
         }
-
+        
         data_type get(Ordinal elem_position) {
             if (elem_position == (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 return elem;
@@ -166,7 +166,7 @@ class PrependGenerator: public Generator<data_type> {
         bool has_next() const {
             return pos <= length;
         }
-
+        
         data_type get(Ordinal elem_position) {
             if (elem_position == Ordinal::finity(0)) {
                 return elem;
@@ -228,6 +228,7 @@ class InsertGenerator: public Generator<data_type> {
             }
             //mistake
         }
+        
 
         data_type get_next() {
             if (pos == elem_pos) {
@@ -266,7 +267,7 @@ class RemoveGenerator: public Generator<data_type> {
         bool has_next() const {
             return pos <= length;
         }
-
+        
         data_type get(Ordinal elem_position) {
             if (elem_position == elem_pos and this->has_next()) {
                 pos++;
@@ -318,12 +319,13 @@ class MapGenerator: public Generator<data_type> {
         bool has_next() const {
             return pos <= length;
         }
-
+        
         data_type get(Ordinal elem_position) {
             pos = elem_position;
             return func(base->get(elem_position));
             //mistake
         }
+        
 
         data_type get_next() {
             if (this->has_next()) {
@@ -358,11 +360,12 @@ class WhereGenerator: public Generator<data_type> {
         bool has_next() const {
             return pos <= length;
         }
-
+        
         data_type get(Ordinal elem_position) {
             return 0;
             //mistake
         }
+        
 
         data_type get_next() {
             bool flag = false;
