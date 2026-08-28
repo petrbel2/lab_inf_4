@@ -71,10 +71,7 @@ public:
     }
 
     data_type Get(Ordinal index) {
-        if (index.get_infinite() != 0) {
-            throw std::logic_error("Index unreacheble");
-        }
-        else if (length.get_finite() <= index.get_finite() and length.get_infinite() == 0) {
+        if (length <= index) {
             throw std::logic_error("Index greater than length");
         }
         else if (cache.contains(index)) {
@@ -82,6 +79,12 @@ public:
         }
         else if (index < gen_pos) {
             throw std::logic_error("Index passed and deleted from cache");
+        }
+        else if (gen_pos.get_infinite() < index.get_infinite()) {
+            gen_pos = index;
+            data_type result = generator->get(index);
+            cache.push(result);
+            return result;
         }
         else {
             while(gen_pos < index) {
@@ -144,8 +147,23 @@ public:
         return this;
     }
 
-    //LazySequence<data_type>* Concat(LazySequence <data_type> *list);
+    data_type Reduce(data_type(*func)(data_type, data_type)) {
+        if (length.get_infinite() != 0) {
+            throw std::logic_error("Can't reduce infinite sequence");
+        }
 
+    }
+    /*
+    LazySequence<data_type>* Concat(LazySequence <data_type> *list) {
+        generator = new ConcatGenerator(length, list, generator);
+        length = length + list->GetLength();
+        return this;
+    }
+    */
+
+    LazySequence<data_type>* Clone() {
+        return this;
+    }
 };
 
 #endif

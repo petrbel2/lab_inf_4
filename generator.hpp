@@ -39,7 +39,7 @@ class SquareGenerator: public Generator<data_type> {
         
         data_type get(Ordinal elem_position) {
             if (elem_position.get_infinite() or elem_position.get_finite() < 0) {
-                return -731; //mistake
+                throw std::logic_error("Index out of range in square generator");
             }
             else {
                 return(elem_position.get_finite() * elem_position.get_finite());
@@ -76,7 +76,7 @@ class FibonaccyGenerator: public Generator<data_type> {
         
         data_type get(Ordinal elem_position) {
             if (elem_position.get_infinite() or (elem_position.get_finite() < pos.get_finite())) {
-                return 0; //mistake
+                throw std::logic_error("Index out of range in Fibonaccy generator");
             }
             else {
                 data_type getresult;
@@ -188,8 +188,7 @@ class PrependGenerator: public Generator<data_type> {
                     return base->get_next();
                 }
                 else {
-                    return -100;
-                    //mistake
+                    throw std::logic_error("No more elements in PrependGenerator");
                 }
             }
         }
@@ -240,8 +239,7 @@ class InsertGenerator: public Generator<data_type> {
                 return base->get_next();
             }
             else {
-                return -666;
-                //mistake
+                throw std::logic_error("No more elements in InsertGenerator");
             }
         }
 
@@ -274,12 +272,13 @@ class RemoveGenerator: public Generator<data_type> {
                 base->get_next();
                 pos++;
                 return base->get_next();
-            } else {
-                return -69;//mistake
-                //pos = elem_position;
-                //return base->get(elem_position);
+            } else if (this->has_next()) {
+                pos = elem_position;
+                return base->get(elem_position);
             }
-            //mistake
+            else {
+                throw std::logic_error("No more elements in RemoveGenerator");
+            }
         }
 
         data_type get_next() {
@@ -292,8 +291,7 @@ class RemoveGenerator: public Generator<data_type> {
                 return base->get_next();
             }
             else {
-                return -67;
-                //mistake
+                throw std::logic_error("No more elements in RemoveGenerator");
             }
         }
 
@@ -333,8 +331,7 @@ class MapGenerator: public Generator<data_type> {
                 return func(base->get_next());
             }
             else {
-                return -68;
-                //mistake
+                throw std::logic_error("No more elements in MapGenerator");
             }
         }
 
@@ -377,8 +374,7 @@ class WhereGenerator: public Generator<data_type> {
                     flag = func(result);
                 }
                 else {
-                    return 0;
-                    //mistake
+                    throw std::logic_error("No more elements in WhereGenerator");
                 }
             }
             return result;
@@ -388,5 +384,93 @@ class WhereGenerator: public Generator<data_type> {
             return new WhereGenerator(length, func, base->clone());
         }
 };
+/*
+template <typename data_type>
+class ConcatGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        Ordinal concat_start;
+        Generator<data_type>* base;
+    public:
+        ConcatGenerator(Ordinal length, LazySequence<data_type>* conc, Generator<data_type>* base_gen): length(length + conc.GetLength()), 
+        pos(0, 0), concat_start(length), base(base_gen) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
 
+        bool has_next() const {
+            return pos <= length;
+        }
+        
+        data_type get(Ordinal elem_position) {
+            return 0;
+            //mistake
+        }
+        
+
+        data_type get_next() {
+            bool flag = false;
+            data_type result;
+            while (not flag) {
+                if (base->has_next()) {
+                    pos++;
+                    result = base->get_next();
+                    flag = func(result);
+                }
+                else {
+                    return 0;
+                    //mistake
+                }
+            }
+            return result;
+        }
+
+        ConcatGenerator* clone() const {
+            return new ConcatGenerator(length, list.Clone(), base->clone());
+        }
+};
+*/
+/*
+template <typename data_type>
+class FunctionGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        data_type(*func)(data_type);
+    public:
+        FunctionGenerator(data_type(*func)(data_type)): length(1, 0), pos(0, 0), func(func) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+        
+        data_type get(Ordinal elem_position) {
+            pos = elem_position;
+            return func(base->get(elem_position));
+            //mistake
+        }
+        
+
+        data_type get_next() {
+            if (this->has_next()) {
+                pos++;
+                return func(base->get_next());
+            }
+            else {
+                return -68;
+                //mistake
+            }
+        }
+
+        MapGenerator* clone() const {
+            return new MapGenerator(length, func, base->clone());
+        }
+};
+*/
 #endif
