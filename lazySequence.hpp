@@ -14,7 +14,7 @@ private:
     Cache<data_type> cache;
 public:
     LazySequence(): length(0, 0), gen_pos(0, 0), generator(), cache(10) {}
-    LazySequence(Generator<data_type>* gen): length(1, 0), gen_pos(0, 0), generator(gen), cache(10) {}
+    LazySequence(Generator<data_type>* gen): length(gen->get_length()), gen_pos(0, 0), generator(gen), cache(10) {}
     LazySequence (data_type* items, int count): length(0, count), gen_pos(0, 0), generator(), cache(10) {
         for (int i = 0; i < count; i++) {
             this->Append(items[i]);
@@ -119,7 +119,7 @@ public:
         delete old_gen;
         return this;
     }
-
+    /*
     Sequence<data_type>* Prepend(data_type item) {
         if (length.get_infinite() == 0) {
         length++;
@@ -128,6 +128,16 @@ public:
         generator = new PrependGenerator(length, item, generator->clone());
         delete old_gen;
         return this;
+    }
+    */
+    Sequence<data_type>* Prepend(data_type item) {
+        if (length.get_infinite() == 0) {
+        length++;
+        }
+        Generator<data_type>* old_gen = generator;
+        generator = new PrependGenerator(length, item, generator->clone());
+        delete old_gen;
+        return new LazySequence<data_type>(generator);
     }
 
     LazySequence<data_type>* InsertAt(data_type item, int index) {

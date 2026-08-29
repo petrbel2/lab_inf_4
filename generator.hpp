@@ -5,6 +5,7 @@
 template<typename data_type>
 class Generator {
     public:
+        virtual Ordinal get_length() const = 0;
         virtual Ordinal position() const = 0;
         virtual bool has_next() const = 0;
         virtual data_type get(Ordinal elem_position) = 0;
@@ -21,8 +22,13 @@ template<typename data_type>
 class SquareGenerator: public Generator<data_type> {
     private:
         Ordinal pos;
+        Ordinal length;
     public:
-        SquareGenerator(): pos(0, 0) {}
+        SquareGenerator(): pos(0, 0), length(1, 0) {}
+
+        Ordinal get_length() const{
+            return length;
+        }
 
         Ordinal position() const{
             return pos;
@@ -56,10 +62,15 @@ template<typename data_type>
 class FibonaccyGenerator: public Generator<data_type> {
     private:
         Ordinal pos;
+        Ordinal length;
         data_type b_1;
         data_type b_2;
     public:
-        FibonaccyGenerator(): pos(0, 0), b_1(1), b_2(0) {}
+        FibonaccyGenerator(): pos(0, 0), length(1, 0), b_1(1), b_2(0) {}
+
+        Ordinal get_length() const{
+            return length;
+        }
 
         Ordinal position() const{
             return pos;
@@ -106,6 +117,10 @@ class AppendGenerator: public Generator<data_type> {
         Generator<data_type>* base;
     public:
         AppendGenerator(Ordinal elem_pos, data_type elem, Generator<data_type>* base_gen): length(elem_pos), pos(0, 0), elem(elem), base(base_gen->clone()) {}
+
+        Ordinal get_length() const{
+            return length;
+        }
 
         Ordinal position() const {
             return pos;
@@ -164,6 +179,10 @@ class PrependGenerator: public Generator<data_type> {
     public:
         PrependGenerator(Ordinal length, data_type elem, Generator<data_type>* base_gen): length(length), pos(0, 0), elem(elem), base(base_gen->clone()) {}
         
+        Ordinal get_length() const{
+            return length;
+        }
+
         Ordinal position() const {
             return pos;
         }
@@ -218,6 +237,10 @@ class InsertGenerator: public Generator<data_type> {
     public:
         InsertGenerator(Ordinal length, Ordinal elem_pos, data_type elem, Generator<data_type>* base_gen): length(length), pos(0, 0), elem_pos(elem_pos), elem(elem), base(base_gen->clone()) {}
         
+        Ordinal get_length() const{
+            return length;
+        }
+
         Ordinal position() const {
             return pos;
         }
@@ -271,6 +294,10 @@ class RemoveGenerator: public Generator<data_type> {
     public:
         RemoveGenerator(Ordinal length, Ordinal elem_pos, Generator<data_type>* base_gen): length(length), pos(0, 0), elem_pos(elem_pos), base(base_gen->clone()) {}
         
+        Ordinal get_length() const{
+            return length;
+        }
+
         Ordinal position() const {
             return pos;
         }
@@ -327,6 +354,10 @@ class MapGenerator: public Generator<data_type> {
     public:
         MapGenerator(Ordinal length, data_type(*func)(data_type), Generator<data_type>* base_gen): length(length), pos(0, 0), func(func), base(base_gen->clone()) {}
         
+        Ordinal get_length() const{
+            return length;
+        }
+
         Ordinal position() const {
             return pos;
         }
@@ -370,6 +401,10 @@ class WhereGenerator: public Generator<data_type> {
         Generator<data_type>* base;
     public:
         WhereGenerator(Ordinal length, bool(*func)(data_type), Generator<data_type>* base_gen): length(length), pos(0, 0), func(func), base(base_gen->clone()) {}
+        
+        Ordinal get_length() const{
+            return length;
+        }
         
         Ordinal position() const {
             return pos;
