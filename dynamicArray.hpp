@@ -38,7 +38,7 @@ public:
 
     DynamicArray(DynamicArray<data_type> &dynamicArray) {
         length = dynamicArray.GetLength();
-        data = new data_type[length];
+        data = new data_type[length + 5];
         for (int i = 0; i < length; i++) {
             data[i] = dynamicArray.data[i];
         }

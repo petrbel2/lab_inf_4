@@ -40,7 +40,7 @@ int main() {
     std::cout<<test_sequence.Get(5)<<"\n";
     */
 
-    // Площадка 3
+    /* Площадка 3
     auto square_gen = new SquareGenerator<int>();
     LazySequence<int> test_sequence(square_gen);
     test_sequence.Append(90);
@@ -55,7 +55,7 @@ int main() {
     std::cout<<test_sequence.Get(1)<<"\n";
     std::cout<<test_sequence.Get(4)<<"\n";
     std::cout<<test_sequence.Get(5)<<"\n";
-    
+    */
 
     /* Площадка 4
     auto square_gen = new SquareGenerator<int>();
@@ -84,6 +84,14 @@ int main() {
         std::cout<<empty_thing.Get(i)<<"\n";
     }
     */
+    
+    auto square_gen = new SquareGenerator<int>();
+    LazySequence<int> test_sequence(square_gen);
+    std::cout<<test_sequence.Get(5)<<"\n";
+    test_sequence.Prepend(3);
+    std::cout<<test_sequence.Get(0)<<"\n";
+    std::cout<<test_sequence.Get(5)<<"\n";
+    
 }
 
 

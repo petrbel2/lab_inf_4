@@ -26,6 +26,12 @@ public:
     Ordinal GetLength() const{
         return length;
     }
+    /*
+    Generator<data_type>* GetGen() {
+        return generator;
+    }
+    */
+    
 
     data_type GetFirst() {
         return this->Get(0);
@@ -101,13 +107,15 @@ public:
     //LazySequence <data_type>* GetSubsequence(int startIndex, int endIndex) {
     //}
 
-    int GetMaterializedCount() const{
-        return cache.get_last_index();
-    }
+    //int GetMaterializedCount() const{
+    //    return cache.get_last_index();
+    //}
 
     LazySequence<data_type>* Append(data_type item) {
         length++;
-        generator = new AppendGenerator(length, item, generator);
+        Generator<data_type>* old_gen = generator;
+        generator = new AppendGenerator(length, item, generator->clone());
+        delete old_gen;
         return this;
     }
 
@@ -115,7 +123,9 @@ public:
         if (length.get_infinite() == 0) {
         length++;
         }
-        generator = new PrependGenerator(length, item, generator);
+        Generator<data_type>* old_gen = generator;
+        generator = new PrependGenerator(length, item, generator->clone());
+        delete old_gen;
         return this;
     }
 
@@ -124,7 +134,9 @@ public:
         if (length.get_infinite() == 0) {
         length++;
         }
-        generator = new InsertGenerator(length, new_index, item, generator);
+        Generator<data_type>* old_gen = generator;
+        generator = new InsertGenerator(length, new_index, item, generator->clone());
+        delete old_gen;
         return this;
     }
 
@@ -133,17 +145,23 @@ public:
         if (length.get_infinite() == 0) {
         length--;
         }
-        generator = new RemoveGenerator(length, new_index, generator);
+        Generator<data_type>* old_gen = generator;
+        generator = new RemoveGenerator(length, new_index, generator->clone());
+        delete old_gen;
         return this;
     }
 
     LazySequence<data_type>* Map(data_type(*func)(data_type)) {
-        generator = new MapGenerator(length, func, generator);
+        Generator<data_type>* old_gen = generator;
+        generator = new MapGenerator(length, func, generator->clone());
+        delete old_gen;
         return this;
     }
 
     LazySequence<data_type>* Where(bool(*func)(data_type)) {
-        generator = new WhereGenerator(length, func, generator);
+        Generator<data_type>* old_gen = generator;
+        generator = new WhereGenerator(length, func, generator->clone());
+        delete old_gen;
         return this;
     }
 
@@ -151,7 +169,12 @@ public:
         if (length.get_infinite() != 0) {
             throw std::logic_error("Can't reduce infinite sequence");
         }
-
+        //make a copy with gen_pos = 0
+        data_type arg_3 = func(this->Get(0), this->Get(1));
+        for(int i  = 2; i < length.get_finite(); i++) {
+            arg_3 = func(arg_3, this->Get(i));
+        }
+        return arg_3;
     }
     /*
     LazySequence<data_type>* Concat(LazySequence <data_type> *list) {
