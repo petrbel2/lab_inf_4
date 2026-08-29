@@ -1,5 +1,5 @@
-#ifndef CASH_H 
-#define CASH_H
+#ifndef CACHE_H 
+#define CACHE_H
 #include "dynamicArray.hpp"
 #include "ordinal.hpp"
 

@@ -69,7 +69,7 @@ class FibonaccyGenerator: public Generator<data_type> {
             return true;
         }
 
-        Generator<data_type>* clone() const{
+        FibonaccyGenerator<data_type>* clone() const{
             FibonaccyGenerator<data_type>* clone_gen = new FibonaccyGenerator<data_type>();
             return clone_gen;
         }

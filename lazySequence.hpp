@@ -32,6 +32,7 @@ public:
     }
     */
     
+    
 
     data_type GetFirst() {
         return this->Get(0);

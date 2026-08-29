@@ -87,7 +87,7 @@ int main() {
     
     auto square_gen = new SquareGenerator<int>();
     LazySequence<int> test_sequence(square_gen);
-    std::cout<<test_sequence.Get(5)<<"\n";
+    //std::cout<<test_sequence.Get(5)<<"\n";
     test_sequence.Prepend(3);
     std::cout<<test_sequence.Get(0)<<"\n";
     std::cout<<test_sequence.Get(5)<<"\n";
