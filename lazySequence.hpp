@@ -114,10 +114,7 @@ public:
 
     LazySequence<data_type>* Append(data_type item) {
         length++;
-        Generator<data_type>* old_gen = generator;
-        generator = new AppendGenerator(length, item, generator->clone());
-        delete old_gen;
-        return this;
+        return new LazySequence<data_type>(new AppendGenerator(length, item, generator->clone()));
     }
     /*
     Sequence<data_type>* Prepend(data_type item) {
@@ -130,14 +127,11 @@ public:
         return this;
     }
     */
-    Sequence<data_type>* Prepend(data_type item) {
+    LazySequence<data_type>* Prepend(data_type item) {
         if (length.get_infinite() == 0) {
         length++;
         }
-        Generator<data_type>* old_gen = generator;
-        generator = new PrependGenerator(length, item, generator->clone());
-        delete old_gen;
-        return new LazySequence<data_type>(generator);
+        return new LazySequence<data_type>(new PrependGenerator(length, item, generator->clone()));
     }
 
     LazySequence<data_type>* InsertAt(data_type item, int index) {
@@ -145,10 +139,14 @@ public:
         if (length.get_infinite() == 0) {
         length++;
         }
-        Generator<data_type>* old_gen = generator;
-        generator = new InsertGenerator(length, new_index, item, generator->clone());
-        delete old_gen;
-        return this;
+        return new LazySequence<data_type>(new InsertGenerator(length, index, item, generator->clone()));
+    }
+
+    LazySequence<data_type>* InsertAt(data_type item, Ordinal index) {
+        if (length.get_infinite() == index.get_infinite()) {
+        length++;
+        }
+        return new LazySequence<data_type>(new InsertGenerator(length, index, item, generator->clone()));
     }
 
     LazySequence<data_type>* Remove(int index) {
@@ -156,48 +154,140 @@ public:
         if (length.get_infinite() == 0) {
         length--;
         }
-        Generator<data_type>* old_gen = generator;
-        generator = new RemoveGenerator(length, new_index, generator->clone());
-        delete old_gen;
-        return this;
+        return new LazySequence<data_type>(new RemoveGenerator(length, index, generator->clone()));
+    }
+
+    LazySequence<data_type>* Remove(Ordinal index) {
+        if (length.get_infinite() == index.get_infinite()) {
+        length--;
+        }
+        return new LazySequence<data_type>(new RemoveGenerator(length, index, generator->clone()));
     }
 
     LazySequence<data_type>* Map(data_type(*func)(data_type)) {
-        Generator<data_type>* old_gen = generator;
-        generator = new MapGenerator(length, func, generator->clone());
-        delete old_gen;
-        return this;
+        return new LazySequence<data_type>(new MapGenerator(length, func, generator->clone()));
     }
 
     LazySequence<data_type>* Where(bool(*func)(data_type)) {
-        Generator<data_type>* old_gen = generator;
-        generator = new WhereGenerator(length, func, generator->clone());
-        delete old_gen;
-        return this;
+        return new LazySequence<data_type>(new WhereGenerator(length, func, generator->clone()));
     }
 
     data_type Reduce(data_type(*func)(data_type, data_type)) {
         if (length.get_infinite() != 0) {
             throw std::logic_error("Can't reduce infinite sequence");
         }
-        //make a copy with gen_pos = 0
-        data_type arg_3 = func(this->Get(0), this->Get(1));
+        LazySequence<data_type>* copy_seq = this->Clone();
+        data_type arg = func(copy_seq->Get(0), copy_seq->Get(1));
         for(int i  = 2; i < length.get_finite(); i++) {
-            arg_3 = func(arg_3, this->Get(i));
+            arg = func(arg, copy_seq->Get(i));
         }
-        return arg_3;
+        delete copy_seq;
+        return arg;
     }
-    /*
+    
     LazySequence<data_type>* Concat(LazySequence <data_type> *list) {
-        generator = new ConcatGenerator(length, list, generator);
-        length = length + list->GetLength();
-        return this;
+        return new LazySequence<data_type>(new ConcatGenerator(length, list, generator->clone()));        
     }
-    */
 
     LazySequence<data_type>* Clone() {
-        return this;
+        return new LazySequence<data_type>(generator->clone());
     }
+
+    ~LazySequence() {
+        delete generator;
+    }
+};
+
+template <typename data_type>
+class ConcatGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        Ordinal concat_start;
+        LazySequence<data_type>* concat_seq;
+        Generator<data_type>* base;
+    public:
+        ConcatGenerator(Ordinal length, LazySequence<data_type>* conc, Generator<data_type>* base_gen): length(length + conc.GetLength()), 
+        pos(0, 0), concat_start(length), concat_seq(conc), base(base_gen) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+        
+        data_type get(Ordinal elem_position) {
+            return 0;
+            //mistake
+        }
+        
+
+        data_type get_next() {
+            if (this->has_next()) {
+                pos++;
+                if (pos < Ordinal(concat_start.get_infinite(), concat_start.get_finite())) {
+                    return base->get_next();
+                }
+                else {
+                    return concat_seq->Get(Ordinal(pos.get_infinite() - concat_start.get_infinite(), pos.get_finite() - concat_start.get_finite()));
+                }
+            }
+            else {
+                throw std::runtime_error("No more elements in ConcatGenerator");
+            }
+        }
+
+        ConcatGenerator* clone() const {
+            return new ConcatGenerator(length, concat_seq->Clone(), base->clone());
+        }
+};
+
+template <typename data_type>
+class ConcatGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        Ordinal concat_start;
+        LazySequence<data_type>* concat_seq;
+        Generator<data_type>* base;
+    public:
+        ConcatGenerator(Ordinal length, LazySequence<data_type>* conc, Generator<data_type>* base_gen): length(length + conc.GetLength()), 
+        pos(0, 0), concat_start(length), concat_seq(conc), base(base_gen) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+        
+        data_type get(Ordinal elem_position) {
+            return 0;
+            //mistake
+        }
+        
+
+        data_type get_next() {
+            if (this->has_next()) {
+                pos++;
+                if (pos < Ordinal(concat_start.get_infinite(), concat_start.get_finite())) {
+                    return base->get_next();
+                }
+                else {
+                    return concat_seq->Get(Ordinal(pos.get_infinite() - concat_start.get_infinite(), pos.get_finite() - concat_start.get_finite()));
+                }
+            }
+            else {
+                throw std::runtime_error("No more elements in ConcatGenerator");
+            }
+        }
+
+        ConcatGenerator* clone() const {
+            return new ConcatGenerator(length, concat_seq->Clone(), base->clone());
+        }
 };
 
 #endif

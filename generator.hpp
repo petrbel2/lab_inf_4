@@ -235,6 +235,7 @@ class InsertGenerator: public Generator<data_type> {
         data_type elem;
         Generator<data_type>* base;
     public:
+        InsertGenerator(Ordinal length, int elem_pos, data_type elem, Generator<data_type>* base_gen): length(length), pos(0, 0), elem_pos(0, elem_pos), elem(elem), base(base_gen->clone()) {}
         InsertGenerator(Ordinal length, Ordinal elem_pos, data_type elem, Generator<data_type>* base_gen): length(length), pos(0, 0), elem_pos(elem_pos), elem(elem), base(base_gen->clone()) {}
         
         Ordinal get_length() const{
@@ -292,6 +293,7 @@ class RemoveGenerator: public Generator<data_type> {
         Ordinal elem_pos;
         Generator<data_type>* base;
     public:
+        RemoveGenerator(Ordinal length, int elem_pos, Generator<data_type>* base_gen): length(length), pos(0, 0), elem_pos(0, elem_pos), base(base_gen->clone()) {}
         RemoveGenerator(Ordinal length, Ordinal elem_pos, Generator<data_type>* base_gen): length(length), pos(0, 0), elem_pos(elem_pos), base(base_gen->clone()) {}
         
         Ordinal get_length() const{
@@ -405,7 +407,7 @@ class WhereGenerator: public Generator<data_type> {
         Ordinal get_length() const{
             return length;
         }
-        
+
         Ordinal position() const {
             return pos;
         }
@@ -425,7 +427,7 @@ class WhereGenerator: public Generator<data_type> {
             data_type result;
             while (not flag) {
                 if (base->has_next()) {
-                    pos++;
+                    
                     result = base->get_next();
                     flag = func(result);
                 }
@@ -433,6 +435,7 @@ class WhereGenerator: public Generator<data_type> {
                     throw std::logic_error("No more elements in WhereGenerator");
                 }
             }
+            pos++;
             return result;
         }
 
@@ -444,54 +447,7 @@ class WhereGenerator: public Generator<data_type> {
             delete base;
         }
 };
-/*
-template <typename data_type>
-class ConcatGenerator: public Generator<data_type> {
-    private:
-        Ordinal length;
-        Ordinal pos;
-        Ordinal concat_start;
-        Generator<data_type>* base;
-    public:
-        ConcatGenerator(Ordinal length, LazySequence<data_type>* conc, Generator<data_type>* base_gen): length(length + conc.GetLength()), 
-        pos(0, 0), concat_start(length), base(base_gen) {}
-        
-        Ordinal position() const {
-            return pos;
-        }
 
-        bool has_next() const {
-            return pos <= length;
-        }
-        
-        data_type get(Ordinal elem_position) {
-            return 0;
-            //mistake
-        }
-        
-
-        data_type get_next() {
-            bool flag = false;
-            data_type result;
-            while (not flag) {
-                if (base->has_next()) {
-                    pos++;
-                    result = base->get_next();
-                    flag = func(result);
-                }
-                else {
-                    return 0;
-                    //mistake
-                }
-            }
-            return result;
-        }
-
-        ConcatGenerator* clone() const {
-            return new ConcatGenerator(length, list.Clone(), base->clone());
-        }
-};
-*/
 /*
 template <typename data_type>
 class FunctionGenerator: public Generator<data_type> {
