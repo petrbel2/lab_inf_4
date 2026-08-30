@@ -1,6 +1,8 @@
 #include <iostream>
 #include "lazySequence.hpp"
 #include "tests.hpp"
+//#include <cstdio>
+
 
 int add_3(int arg) {
         return arg + 3;
@@ -13,6 +15,10 @@ bool if_even(int arg) {
     else {
         return false;
     }
+}
+
+int sum_reduce(int a, int b) {
+    return a + b;
 }
 
 static void clear_input_buffer(void) {
@@ -35,6 +41,20 @@ int main() {
     std::cout<<"SquareGenerator testing. successful tests "<<big_counter<<" out of 4\n";
     big_counter = test_fibonaccy_generator();
     std::cout<<"FibonaccyGenerator testing. successful tests "<<big_counter<<" out of 4\n";
+    big_counter = test_append_generator();
+    std::cout<<"AppendGenerator testing. successful tests "<<big_counter<<" out of 4\n";
+    big_counter = test_prepend_generator();
+    std::cout<<"PrependGenerator testing. successful tests "<<big_counter<<" out of 3\n";
+    big_counter = test_insert_generator();
+    std::cout<<"InsertGenerator testing. successful tests "<<big_counter<<" out of 3\n";
+    big_counter = test_remove_generator();
+    std::cout<<"RemoveGenerator testing. successful tests "<<big_counter<<" out of 3\n";
+    big_counter = test_map_generator();
+    std::cout<<"MapGenerator testing. successful tests "<<big_counter<<" out of 3\n";
+    big_counter = test_where_generator();
+    std::cout<<"WhereGenerator testing. successful tests "<<big_counter<<" out of 3\n";
+    big_counter = test_subseq_generator();
+    std::cout<<"SubsequenceGenerator testing. successful tests "<<big_counter<<" out of 3\n";
     
     
     /* Площадка 2
@@ -130,185 +150,145 @@ int main() {
     std::cout<<basic_seq->Get(0)<<"\n";
     delete basic_seq;
     */
+
     int choice;
     int buffer;
+    int index;
     
-    test_LinkedList();
-    test_Queue();
-    test_Stack();
-    test_Deque();
-    test_Vector();
-    std::cout<<"Enter queue length: ";
-    std::cin>>buffer; 
-    int* arr = new int[buffer];
-    for (int i = 0; i < buffer; i++) {
-        std::cout<<"Element: ";
-        std::cin>>arr[i];
-    }
-    Queue<int> test_1(arr, buffer);
-    delete[] arr;
-    std::cout<<"Enter Stack length: ";
-    std::cin>>buffer;
-    int* arr1 = new int[buffer];
-    for (int i = 0; i < buffer; i++) {
-        std::cout<<"Element: ";
-        std::cin>>arr1[i];
-    }
-    Stack<int> test_2(arr1, buffer);
-    delete[] arr1;
-    std::cout<<"Enter Deque length: ";
-    std::cin>>buffer;
-    int* arr2 = new int[buffer];
-    for (int i = 0; i < buffer; i++) {
-        std::cout<<"Element: ";
-        std::cin>>arr2[i];
-    }
-    Deque<int> test_3(arr2, buffer);
-    delete[] arr2;
-        std::cout<<"Enter vector length: ";
-    std::cin>>buffer;
-    int* arr4 = new int[buffer];
-    for (int i = 0; i < buffer; i++) {
-        std::cout<<"Element: ";
-        std::cin>>arr4[i];
-    }
-    Vector<int> test_4(arr4, buffer);
-    delete[] arr4;
-    printf(" [1] Get Queue length\n");
-    printf(" [2] Get Steque length\n");
-    printf(" [3] Get Deque length\n");
-    printf(" [4] Append Queue element\n");
-    printf(" [5] Append Steque element\n");
-    printf(" [6] Append Deque element\n");
-    printf(" [7] Prepend Deque element\n");
-    printf(" [8] Get Queue element\n");
-    printf(" [9] Get Steque element\n");
-    printf(" [10] Get Deque element\n");
-    printf(" [11] Get Vector length\n");
-    printf(" [12] Get Vector norm\n");
-    printf(" [13] Sum vectors\n");
-    printf(" [14] Subtract vectors\n");
-    printf(" [15] Multiply vectors\n");
-    printf(" [16] Multiply vector \n");
-    printf(" [0] Exit\n");
-    printf("----------------------------\n");
-    while (1) {
-        
-        printf("Choose: ");
-
-        if (scanf("%d", &choice) != 1) {
-            printf("Ошибка: введено не число.\n");
+    auto gen = new SquareGenerator<int>();
+    LazySequence<int>* seq = new LazySequence<int>(gen);
+    
+    std::cout << " [1] Get Length\n";
+    std::cout << " [2] Get First\n";
+    std::cout << " [3] Get Last\n";
+    std::cout << " [4] Get at index\n";
+    std::cout << " [5] Append\n";
+    std::cout << " [6] Prepend\n";
+    std::cout << " [7] Insert at index\n";
+    std::cout << " [8] Remove at index\n";
+    std::cout << " [9] Map\n";
+    std::cout << " [10] Where\n";
+    std::cout << " [11] Reduce\n";
+    std::cout << " [12] Concat\n";
+    std::cout << " [13] Get Subsequence\n";
+    std::cout << " [0] Exit\n";
+    std::cout << "----------------------------\n";
+    
+    while (true) {
+        std::cout << "Choose: ";
+        if (!(std::cin >> choice)) {
+            std::cout << "Error: not a number.\n";
             clear_input_buffer();
             continue;
         }
-
+        
         switch (choice) {
             case 1:
-                std::cout<<test_1.GetLength()<<"\n";
+                std::cout<< "Length: " <<seq->GetLength().get_infinite()<<", "<<seq->GetLength().get_finite() << "\n";
                 break;
             case 2:
-                std::cout<<test_2.GetLength()<<"\n";
+                try {
+                    std::cout<<"First: "<<seq->GetFirst()<<"\n";
+                } catch (const std::exception& e) {
+                    std::cout<<"Error: "<<e.what()<<"\n";
+                }
                 break;
             case 3:
-                std::cout<<test_3.GetLength()<<"\n";
+                try {
+                    std::cout<<"Last: "<<seq->GetLast()<<"\n";
+                } catch (const std::exception& e) {
+                    std::cout<<"Error: "<<e.what()<<"\n";
+                }
                 break;
             case 4:
-                std::cout<<"New element: ";
-                std::cin>>buffer;
-                test_1.Append(buffer);
-                clear_input_buffer();
+                std::cout<<"Index: ";
+                std::cin>>index;
+                try {
+                    std::cout<<"Element: "<<seq->Get(index)<<"\n";
+                } catch (const std::exception& e) {
+                    std::cout<<"Error: "<<e.what()<<"\n";
+                }
                 break;
             case 5:
                 std::cout<<"New element: ";
                 std::cin>>buffer;
-                test_2.Append(buffer);
-                clear_input_buffer();
+                seq = seq->Append(buffer);
                 break;
             case 6:
                 std::cout<<"New element: ";
                 std::cin>>buffer;
-                test_3.Append(buffer);
-                clear_input_buffer();
+                seq = seq->Prepend(buffer);
                 break;
             case 7:
+                std::cout<<"Index: ";
+                std::cin>>index;
                 std::cout<<"New element: ";
                 std::cin>>buffer;
-                test_3.Prepend(buffer);
-                clear_input_buffer();
+                seq = seq->InsertAt(buffer, index);
                 break;
             case 8:
-                std::cout<<test_1.Pop()<<"\n";
+                std::cout<<"Index: ";
+                std::cin>>index;
+                seq = seq->Remove(index);
                 break;
             case 9:
-                std::cout<<test_2.Pop()<<"\n";
+                seq = seq->Map(add_3);
+                std::cout<<"Mapped sequence\n";
                 break;
             case 10:
-                std::cout<<test_3.PopFront()<<"\n";
+                seq = seq->Where(if_even);
+                std::cout<<"Filtered sequence\n";
                 break;
             case 11:
-                std::cout<<test_4.GetLength()<<"\n";
+                try {
+                    int result = seq->Reduce(sum_reduce);
+                    std::cout<<"Reduced result: "<<result<<"\n";
+                } catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << "\n";
+                }
                 break;
             case 12:
-                std::cout<<test_4.vector_norm()<<"\n";
+                std::cout<<"Concat length: ";
+                std::cin>>buffer;
+                {
+                    auto concat_gen = new SquareGenerator<int>();
+                    LazySequence<int>* concat_seq = new LazySequence<int>(concat_gen);
+                    for (int i = 0; i < buffer; i++) {
+                        int val;
+                        std::cout<<"Element: ";
+                        std::cin>>val;
+                        concat_seq = concat_seq->Append(val);
+                    }
+                    seq = seq->Concat(concat_seq);
+                    delete concat_seq;
+                }
                 break;
             case 13:
                 {
-                std::cout<<"Length: ";
-                std::cin>>buffer;
-                int* arr3 = new int[buffer];
-                for (int i = 0; i < buffer; i++) {
-                    std::cout<<"Element: ";
-                    std::cin>>arr3[i];
+                    int start_idx, end_idx;
+                    std::cout<<"Start index: ";
+                    std::cin>>start_idx;
+                    std::cout<<"End index: ";
+                    std::cin>>end_idx;
+                    try {
+                        LazySequence<int>* subseq = seq->GetSubsequence(start_idx, end_idx);
+                        std::cout<<"Subsequence length: "<<subseq->GetLength().get_infinite()<<", "<<subseq->GetLength().get_finite()<<"\n";
+                        delete subseq;
+                    } catch (const std::exception& e) {
+                        std::cout<<"Error: " <<e.what()<<"\n";
+                    }
                 }
-                Vector<int> test_7(arr3, buffer);
-                delete[] arr3;
-                test_4 = test_4 + test_7;
-                break;
-                }
-            case 14:
-                {
-                std::cout<<"Length: ";
-                std::cin>>buffer;
-                int* arr4 = new int[buffer];
-                for (int i = 0; i < buffer; i++) {
-                    std::cout<<"Element: ";
-                    std::cin>>arr4[i];
-                }
-                Vector<int> test_5(arr4, buffer);
-                delete[] arr4;
-                test_4 = test_4 - test_5;
-                break;
-                }
-            case 15:
-                {
-                std::cout<<"Length: ";
-                std::cin>>buffer;
-                int* arr5 = new int[buffer];
-                for (int i = 0; i < buffer; i++) {
-                    std::cout<<"Element: ";
-                    std::cin>>arr5[i];
-                }
-                Vector<int> test_6(arr5, buffer);
-                delete[] arr5;
-                int multiresult = test_4 * test_6;
-                std::cout<<multiresult<<"\n";
-                break;
-                }
-            case 16:
-                {
-                std::cout<<"Skalar: ";
-                std::cin>>buffer;
-                test_4 = test_4 * buffer;
-                break;
-                }
-            default:
-                std::cout<<"Wrong number.\n";
                 break;
             case 0:
                 std::cout<<"Leaving\n";
+                delete seq;
                 return 0;
+            default:
+                std::cout<<"Wrong number.\n";
+                break;
         }
     }
 }
+
 
 

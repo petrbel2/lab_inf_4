@@ -46,7 +46,10 @@ class SquareGenerator: public Generator<data_type> {
                 throw std::logic_error("Index out of range in square generator");
             }
             else {
-                return(elem_position.get_finite() * elem_position.get_finite());
+                while (pos < elem_position) {
+                    get_next();
+                }
+                return get_next();
             }
         }
 
@@ -54,6 +57,8 @@ class SquareGenerator: public Generator<data_type> {
             pos++;
             return ((pos.get_finite() - 1) * (pos.get_finite() - 1));
         }
+
+        ~SquareGenerator() {};
 };
 
 template<typename data_type>
@@ -139,7 +144,7 @@ class AppendGenerator: public Generator<data_type> {
                 }
             }
             else {
-                while (pos < elem_position) {
+                while (pos <= elem_position) {
                     result = this->get_next();
                 }
                 return result;
@@ -196,7 +201,7 @@ class PrependGenerator: public Generator<data_type> {
                     return base->get(elem_position);
                 }
             else {
-                while (pos < elem_position) {
+                while (pos <= elem_position) {
                     result = this->get_next();
                 }
                 return result;
@@ -267,7 +272,7 @@ class InsertGenerator: public Generator<data_type> {
                 }
             }
             else {
-                while (pos < elem_position) {
+                while (pos <= elem_position) {
                     result = this->get_next();
                 }
                 return result;
@@ -331,7 +336,7 @@ class RemoveGenerator: public Generator<data_type> {
                 return base->get(elem_position);
             }
             else {
-                while (pos < elem_position) {
+                while (pos <= elem_position) {
                     result = this->get_next();
                 }
                 return result;
@@ -390,7 +395,7 @@ class MapGenerator: public Generator<data_type> {
                 return base->get(elem_position);
                 }
             else {
-                while (pos < elem_position) {
+                while (pos <= elem_position) {
                     result = this->get_next();
                 }
                 return result;
@@ -455,7 +460,7 @@ class WhereGenerator: public Generator<data_type> {
                 return result;
                 }
             else {
-                while (pos < elem_position) {
+                while (pos <= elem_position) {
                     result = this->get_next();
                 }
                 return result;
@@ -561,7 +566,7 @@ class SubsequenceGenerator: public Generator<data_type> {
                 return base->get(subseq_start + elem_position);
                 }
             else {
-                while (pos < elem_position) {
+                while (pos <= elem_position) {
                     result = this->get_next();
                 }
                 return result;
@@ -583,10 +588,11 @@ class SubsequenceGenerator: public Generator<data_type> {
         SubsequenceGenerator* clone() const {
             return new SubsequenceGenerator(subseq_start, subseq_end, base->clone());
         }
-
+        
         ~SubsequenceGenerator() {
             delete base;
         }
+        
 };
 
 template <typename data_type>
@@ -625,7 +631,7 @@ class ConcatGenerator: public Generator<data_type> {
                 return base->get(elem_position);
                 }
             else {
-                while (pos < elem_position) {
+                while (pos <= elem_position) {
                     result = this->get_next();
                 }
                 return result;

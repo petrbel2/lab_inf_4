@@ -44,7 +44,7 @@ public:
     }
 
     bool operator<=(const Ordinal &other) const {
-        return *this < other || *this == other;
+        return (*this < other or *this == other);
     }
 
     bool operator>(const Ordinal &other) const {

@@ -296,3 +296,306 @@ int test_fibonaccy_generator() {
 
     return good_counter;
 }
+
+int double_val(int x) {
+    return x * 2;
+}
+
+bool is_even(int x) {
+    return x % 2 == 0;
+}
+
+int func_seq_test(Sequence<int>* seq) {
+    return seq->GetLength().get_finite();
+}
+
+int test_append_generator() {
+    int good_counter = 0;
+    SquareGenerator<int> base_gen;
+    AppendGenerator<int> gen(Ordinal(1, 1), 99, &base_gen);
+    try {
+        if (gen.position().get_finite() != 0) {
+            throw std::runtime_error("AppendGenerator initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get_next() != 0 or gen.get_next() != 1 or gen.get_next() != 4) {
+            throw std::runtime_error("AppendGenerator get_next() sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get(Ordinal(0, 3)) != 9 or gen.get(Ordinal(1, 0)) != 99) {
+            throw std::runtime_error("AppendGenerator get() failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        AppendGenerator<int>* cloned = gen.clone();
+        if (cloned->get_next() != 0) {
+            throw std::runtime_error("AppendGenerator clone get_next() failture");
+        }
+        delete cloned;
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << "Clone test failed: " << error.what() << "\n";
+    }
+    return good_counter;
+}
+
+int test_prepend_generator() {
+    int good_counter = 0;
+    SquareGenerator<int> base_gen;
+    PrependGenerator<int> gen(Ordinal(1, 0), 99, &base_gen);
+    try {
+        if (gen.position().get_finite() != 0) {
+            throw std::runtime_error("PrependGenerator initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get_next() != 99 or gen.get_next() != 0 or gen.get_next() != 1 or gen.get_next() != 4) {
+            throw std::runtime_error("PrependGenerator get_next() sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        PrependGenerator<int>* cloned = gen.clone();
+        if (cloned->get_next() != 99) {
+            throw std::runtime_error("PrependGenerator clone get_next() failture");
+        }
+        delete cloned;
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << "Clone test failed: " << error.what() << "\n";
+    }
+    return good_counter;
+}
+
+int test_insert_generator() {
+    int good_counter = 0;
+    SquareGenerator<int> base_gen;
+    InsertGenerator<int> gen(Ordinal(1, 0), 3, 99, &base_gen);
+    try {
+        if (gen.position().get_finite() != 0) {
+            throw std::runtime_error("InsertGenerator initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get_next() != 0 or gen.get_next() != 1 or gen.get_next() != 4 or gen.get_next() != 99) {
+            throw std::runtime_error("InsertGenerator get_next() sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        InsertGenerator<int>* cloned = gen.clone();
+        if (cloned->get(Ordinal(0, 3)) != 99) {
+            throw std::runtime_error("InsertGenerator clone get() failture");
+        }
+        delete cloned;
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << "Clone test failed: " << error.what() << "\n";
+    }
+    return good_counter;
+}
+
+int test_remove_generator() {
+    int good_counter = 0;
+    SquareGenerator<int> base_gen;
+    RemoveGenerator<int> gen(Ordinal(1, 0), 1, &base_gen);
+    try {
+        if (gen.position().get_finite() != 0) {
+            throw std::runtime_error("RemoveGenerator initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get_next() != 0 or gen.get_next() != 4 or gen.get_next() != 9) {
+            throw std::runtime_error("RemoveGenerator get_next() sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        RemoveGenerator<int>* cloned = gen.clone();
+        if (cloned->get_next() != 0 or cloned->get_next() != 4 or cloned->get_next() != 9) {
+            throw std::runtime_error("RemoveGenerator clone get_next() failture");
+        }
+        delete cloned;
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << "Clone test failed: " << error.what() << "\n";
+    }
+    return good_counter;
+}
+
+int test_map_generator() {
+    int good_counter = 0;
+    SquareGenerator<int> base_gen;
+    MapGenerator<int> gen(Ordinal(1, 0), double_val, &base_gen);
+    try {
+        if (gen.position().get_finite() != 0) {
+            throw std::runtime_error("MapGenerator initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get_next() != 0 or gen.get_next() != 2 or gen.get_next() != 8 or gen.get_next() != 18) {
+            throw std::runtime_error("MapGenerator get_next() sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        MapGenerator<int>* cloned = gen.clone();
+        if (cloned->get_next() != 0 or cloned->get_next() != 2 or cloned->get_next() != 8 or cloned->get_next() != 18) {
+            throw std::runtime_error("MapGenerator clone get_next() failture");
+        }
+        delete cloned;
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << "Clone test failed: " << error.what() << "\n";
+    }
+    return good_counter;
+}
+
+int test_where_generator() {
+    int good_counter = 0;
+    SquareGenerator<int> base_gen;
+    WhereGenerator<int> gen(Ordinal(1, 0), is_even, &base_gen);
+    try {
+        if (gen.position().get_finite() != 0) {
+            throw std::runtime_error("WhereGenerator initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get_next() != 0 or gen.get_next() != 4 or gen.get_next() != 16 or gen.get_next() != 36) {
+            throw std::runtime_error("WhereGenerator get_next() sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        WhereGenerator<int>* cloned = gen.clone();
+        if (cloned->get_next() != 0 or cloned->get_next() != 4 or cloned->get_next() != 16 or cloned->get_next() != 36) {
+            throw std::runtime_error("WhereGenerator clone get_next() failture");
+        }
+        delete cloned;
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << "Clone test failed: " << error.what() << "\n";
+    }
+    return good_counter;
+}
+/*
+int test_function_generator() {
+    int good_counter = 0;
+    LazySequence<int> start_seq;
+    try {
+        FunctionGenerator<int> gen(func_seq_test, &start_seq);
+        if (gen.position().get_finite() != 0) {
+            throw std::runtime_error("FunctionGenerator initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    } catch (const std::exception& error) {
+        std::cout << error.what() << "\n";
+    }
+    return good_counter;
+}
+*/
+int test_subseq_generator() {
+    int good_counter = 0;
+    SquareGenerator<int> base_gen;
+    SubsequenceGenerator<int> gen(Ordinal(0, 1), Ordinal(0, 4), &base_gen);
+    try {
+        if (gen.position().get_finite() != 0) {
+            throw std::runtime_error("SubsequenceGenerator initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get_next() != 1 or gen.get_next() != 4 or gen.get_next() != 9) {
+            throw std::runtime_error("SubsequenceGenerator get_next() sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        SubsequenceGenerator<int>* cloned = gen.clone();
+        if (cloned->get_next() != 1 or cloned->get_next() != 4 or cloned->get_next() != 9) {
+            throw std::runtime_error("SubsequenceGenerator clone get_next() failture");
+        }
+        delete cloned;
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << "Clone test failed: " << error.what() << "\n";
+    }
+    return good_counter;
+}
+
+int test_concat_generator() {
+    int good_counter = 0;
+    SquareGenerator<int> base_gen;
+    int init_data[] = {99, 100};
+    LazySequence<int> concat_seq(init_data, 2);
+    ConcatGenerator<int> gen(Ordinal::finity(2), &concat_seq, &base_gen);
+    try {
+        if (gen.position().get_finite() != 0) {
+            throw std::runtime_error("ConcatGenerator initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get_next() != 0 || gen.get_next() != 1 || gen.get_next() != 99 || gen.get_next() != 100) {
+            throw std::runtime_error("ConcatGenerator get_next() sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        ConcatGenerator<int>* cloned = gen.clone();
+        if (cloned == nullptr) {
+            throw std::runtime_error("ConcatGenerator clone returned nullptr");
+        }
+        delete cloned;
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << "Clone test failed: " << error.what() << "\n";
+    }
+    return good_counter;
+}

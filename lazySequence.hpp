@@ -39,20 +39,10 @@ public:
     }
 
     data_type GetLast() {
-        /*
         if (length.get_finite() == 0) {
             throw std::logic_error("Sequence doesn't have a last element");
-        }
-        else {
-            if (cache.contains(Ordinal(length.get_infinite(), length.get_finite() - 1))) {
-                return cache.get(Ordinal(length.get_infinite(), length.get_finite() - 1));
-            }
-            else {
-                return generator->get(Ordinal(length.get_infinite(), length.get_finite() - 1));
-            } 
-        }
-        */
-       return this->Get(Ordinal(length.get_infinite(), length.get_finite() - 1));
+        }      
+        return this->Get(Ordinal(length.get_infinite(), length.get_finite() - 1));
     }
  
     data_type Get(int index) {
