@@ -67,16 +67,18 @@ int main() {
 
     /* Площадка 4
     auto square_gen = new SquareGenerator<int>();
-    LazySequence<int> test_sequence(square_gen);
-    test_sequence.Map(add_3);
-    test_sequence.Where(if_even);
-    std::cout<<test_sequence.Get(0)<<"\n";
-    std::cout<<test_sequence.Get(1)<<"\n";
-    std::cout<<test_sequence.Get(2)<<"\n";
-    std::cout<<test_sequence.Get(3)<<"\n";
-    std::cout<<test_sequence.Get(4)<<"\n";
-    std::cout<<test_sequence.Get(5)<<"\n";
+    LazySequence<int>* basic_seq = new LazySequence<int>(square_gen);
+    basic_seq = basic_seq->Map(add_3);
+    basic_seq = basic_seq->Where(if_even);
+    std::cout<<basic_seq->Get(0)<<"\n";
+    std::cout<<basic_seq->Get(1)<<"\n";
+    std::cout<<basic_seq->Get(2)<<"\n";
+    std::cout<<basic_seq->Get(3)<<"\n";
+    std::cout<<basic_seq->Get(4)<<"\n";
+    std::cout<<basic_seq->Get(5)<<"\n";
     */
+    
+    /*
     LazySequence<int>* empty_thing = new LazySequence<int>;
     empty_thing = empty_thing->Append(3);
     empty_thing = empty_thing->Prepend(2);
@@ -101,6 +103,26 @@ int main() {
     std::cout<<test_sequence->Get(5)<<"\n";
     delete test_sequence; 
     */   
+    /*
+    auto square_gen = new SquareGenerator<int>();
+    LazySequence<int>* basic_seq = new LazySequence<int>(square_gen);
+    auto square_gen_2 = new SquareGenerator<int>();
+    LazySequence<int>* test_sequence_2 = new LazySequence<int>(square_gen_2);
+    basic_seq = basic_seq->Concat(test_sequence_2);
+    Ordinal to_get(1, 5);
+    std::cout<<basic_seq->GetLength().get_infinite()<<" "<<basic_seq->GetLength().get_finite()<<"\n";
+    std::cout<<basic_seq->Get(5)<<"\n";
+    std::cout<<basic_seq->Get(to_get);
+    delete basic_seq;
+    */
+    auto square_gen = new SquareGenerator<int>();
+    LazySequence<int>* basic_seq = new LazySequence<int>(square_gen);
+    basic_seq = basic_seq->GetSubsequence(4, 10);
+    for (int i = 0; i < 5; i++) {
+        std::cout<<basic_seq->Get(i)<<"\n";
+    }
+    std::cout<<basic_seq->Get(0)<<"\n";
+    delete basic_seq;
 }
 
 

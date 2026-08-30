@@ -11,9 +11,6 @@ class Generator {
         virtual bool has_next() const = 0;
         virtual data_type get(Ordinal elem_position) = 0;
         virtual data_type get_next() = 0;
-
-        //virtual Ordinal estimate_remaining() const { return Omega::infinity(); } 
-
         virtual Generator<data_type>* clone() const = 0; 
 
         virtual ~Generator() {};
@@ -449,7 +446,7 @@ class WhereGenerator: public Generator<data_type> {
             int success_counter = 0;
             if (elem_position.is_infinite()) {
                     while (success_counter <= elem_position.get_finite()) {
-                        result = base->get(elem_position.get_infinite(), counter);
+                        result = base->get(Ordinal(elem_position.get_infinite(), counter));
                         counter++;
                         if (func(result)) {
                             success_counter++;
@@ -490,7 +487,7 @@ class WhereGenerator: public Generator<data_type> {
         }
 };
 
-
+/*
 template <typename data_type>
 class FunctionGenerator: public Generator<data_type> {
     private:
@@ -523,7 +520,7 @@ class FunctionGenerator: public Generator<data_type> {
             data_type result = func(values);
             for (int i = 0; i < values.GetLength().get_finite(); i++) {
                 values = values->Append(result);
-                values = values.GetSubsequence(1, values->GetLength());
+                values = values->GetSubsequence(1, values->GetLength());
             }
             return result;
         }
@@ -532,7 +529,7 @@ class FunctionGenerator: public Generator<data_type> {
             return new FunctionGenerator(func, values);
         }
 };
-
+*/
 
 template <typename data_type>
 class SubsequenceGenerator: public Generator<data_type> {
@@ -545,6 +542,10 @@ class SubsequenceGenerator: public Generator<data_type> {
     public:
         SubsequenceGenerator(Ordinal start, Ordinal end, Generator<data_type>* base_gen): length(end.get_infinite() - start.get_infinite(), end.get_finite() - start.get_finite()), 
         pos(0, 0), subseq_start(start), subseq_end(end), base(base_gen) {}
+
+        Ordinal get_length() const {
+            return length;
+        }
         
         Ordinal position() const {
             return pos;
@@ -555,14 +556,24 @@ class SubsequenceGenerator: public Generator<data_type> {
         }
         
         data_type get(Ordinal elem_position) {
-            return 0;
+            data_type result;
+            if (subseq_start.is_infinite() or elem_position.is_infinite()) {
+                return base->get(subseq_start + elem_position);
+                }
+            else {
+                while (pos < elem_position) {
+                    result = this->get_next();
+                }
+                return result;
+            }
+            throw std::runtime_error("Unknown error in SubsequenceGenerator");
         }
         
 
         data_type get_next() {
             if (this->has_next()) {
                 pos++;
-                return base->get_next();
+                return base->get(subseq_start + pos - Ordinal(0, 1));
             }
             else {
                 throw std::runtime_error("No more elements in SubsequenceGenerator");
@@ -570,7 +581,11 @@ class SubsequenceGenerator: public Generator<data_type> {
         }
 
         SubsequenceGenerator* clone() const {
-            return new SubsequenceGenerator(length, subseq_start, subseq_end, base->clone());
+            return new SubsequenceGenerator(subseq_start, subseq_end, base->clone());
+        }
+
+        ~SubsequenceGenerator() {
+            delete base;
         }
 };
 
@@ -586,8 +601,12 @@ class ConcatGenerator: public Generator<data_type> {
         LazySequence<data_type>* concat_seq;
         Generator<data_type>* base;
     public:
-        ConcatGenerator(Ordinal length, LazySequence<data_type>* conc, Generator<data_type>* base_gen): length(length + conc.GetLength()), 
+        ConcatGenerator(Ordinal length, LazySequence<data_type>* conc, Generator<data_type>* base_gen): length(length + conc->GetLength()), 
         pos(0, 0), concat_start(length), concat_seq(conc), base(base_gen) {}
+
+        Ordinal get_length() const {
+            return length;
+        }
         
         Ordinal position() const {
             return pos;
@@ -598,7 +617,19 @@ class ConcatGenerator: public Generator<data_type> {
         }
         
         data_type get(Ordinal elem_position) {
-            return 0;
+            data_type result;
+            if (elem_position.is_infinite()) {
+                if (elem_position >= concat_start) {
+                    return concat_seq->Get(elem_position - concat_start);
+                }
+                return base->get(elem_position);
+                }
+            else {
+                while (pos < elem_position) {
+                    result = this->get_next();
+                }
+                return result;
+            }
         }
         
 
@@ -619,6 +650,11 @@ class ConcatGenerator: public Generator<data_type> {
 
         ConcatGenerator* clone() const {
             return new ConcatGenerator(length, concat_seq->Clone(), base->clone());
+        }
+
+        ~ConcatGenerator() {
+            delete base;
+            delete concat_seq;
         }
 };
 

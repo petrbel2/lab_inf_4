@@ -54,7 +54,14 @@ public:
     bool operator>=(const Ordinal &other) const {
         return other <= *this;
     }
-    /*
+
+    Ordinal operator+(const Ordinal &other) const {
+            if (other.get_infinite() > 0) {
+                return Ordinal(infinite + other.get_infinite(), other.get_finite());
+            }
+            return Ordinal(infinite, finite + other.get_finite());
+        }
+    
     Ordinal operator-(const Ordinal& other) const {
         if (infinite == 0 and other.infinite > 0) {
             throw std::logic_error("finite Ordinal - infinite Ordinal will give negative value");
@@ -70,7 +77,6 @@ public:
         }
         throw std::logic_error("Omega underflow");
     }
-    */
 };
 
 #endif
