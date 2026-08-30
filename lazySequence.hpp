@@ -13,9 +13,9 @@ private:
     Generator<data_type>* generator;
     Cache<data_type> cache;
 public:
-    LazySequence(): length(0, 0), gen_pos(0, 0), generator(nullptr), cache(10) {}
+    LazySequence(): length(0, 0), gen_pos(0, 0), generator(new EmptyGenerator<data_type>()), cache(10) {}
     LazySequence(Generator<data_type>* gen): length(gen->get_length()), gen_pos(0, 0), generator(gen), cache(10) {}
-    LazySequence (data_type* items, int count): length(0, count), gen_pos(0, 0), generator(nullptr), cache(10) {
+    LazySequence (data_type* items, int count): length(0, count), gen_pos(0, 0), generator(new EmptyGenerator<data_type>()), cache(10) {
         for (int i = 0; i < count; i++) {
             this->Append(items[i]);
         }
@@ -112,9 +112,6 @@ public:
 
     LazySequence<data_type>* Append(data_type item) {
         length++;
-        //if (generator == nullptr) {
-        //    generator = new EmptyGenerator<data_type>();
-        //}
         return new LazySequence<data_type>(new AppendGenerator(length, item, generator->clone()));
     }
     

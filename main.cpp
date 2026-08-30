@@ -81,13 +81,13 @@ int main() {
     empty_thing = empty_thing->Append(3);
     empty_thing = empty_thing->Prepend(2);
     empty_thing = empty_thing->Append(7);
-    empty_thing = empty_thing->Prepend(2);
+    empty_thing = empty_thing->Prepend(1);
     empty_thing = empty_thing->InsertAt(6, 3);
     empty_thing = empty_thing->InsertAt(5, 3);
     empty_thing = empty_thing->InsertAt(4, 3);
     std::cout<<empty_thing->GetLength().get_finite()<<"\n";
     std::cout<<empty_thing->GetLength().get_infinite()<<"\n";
-    //std::cout<<empty_thing.GetLast();
+    std::cout<<empty_thing->GetLast()<<"\n";
     for (int i = 0; i < 7; i++) {
         std::cout<<empty_thing->Get(i)<<"\n";
     }

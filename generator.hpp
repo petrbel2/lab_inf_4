@@ -388,7 +388,7 @@ class MapGenerator: public Generator<data_type> {
         }
         
         data_type get(Ordinal elem_position) {
-                data_type result;
+            data_type result;
             if (elem_position.is_infinite()) {
                 return base->get(elem_position);
                 }
@@ -444,24 +444,26 @@ class WhereGenerator: public Generator<data_type> {
         }
         
         data_type get(Ordinal elem_position) {
-            bool flag = false;
             data_type result;
-            while (pos < elem_position) {
-                while (not flag) {
-                if (base->has_next()) {
-                    
-                    result = base->get_next();
-                    flag = func(result);
+            int counter = 0;
+            int success_counter = 0;
+            if (elem_position.is_infinite()) {
+                    while (success_counter <= elem_position.get_finite()) {
+                        result = base->get(elem_position.get_infinite(), counter);
+                        counter++;
+                        if (func(result)) {
+                            success_counter++;
+                        }
+                    }
+                return result;
                 }
-                else {
-                    throw std::logic_error("No more elements in WhereGenerator");
+            else {
+                while (pos < elem_position) {
+                    result = this->get_next();
                 }
+                return result;
             }
-            pos++;
-            }
-            return result;
         }
-        
 
         data_type get_next() {
             bool flag = false;
@@ -621,7 +623,7 @@ class ConcatGenerator: public Generator<data_type> {
 };
 
 template<typename data_type>
-class EmptyGenerator {
+class EmptyGenerator: public Generator<data_type> {
     public:
         Ordinal get_length() const {
             return Ordinal(0, 0);
