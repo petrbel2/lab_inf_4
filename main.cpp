@@ -45,8 +45,9 @@ int main() {
     std::cout<<basic_seq.Get(4)<<"\n";
     std::cout<<basic_seq.Get(5)<<"\n";
     */
+    
 
-    // Площадка 3
+    /* Площадка 3
     auto square_gen = new SquareGenerator<int>();
     LazySequence<int>* basic_seq = new LazySequence<int>(square_gen);
     basic_seq = basic_seq->Append(90);
@@ -62,6 +63,7 @@ int main() {
     std::cout<<basic_seq->Get(4)<<"\n";
     std::cout<<basic_seq->Get(5)<<"\n";
     delete basic_seq;
+    */
 
     /* Площадка 4
     auto square_gen = new SquareGenerator<int>();
@@ -74,22 +76,22 @@ int main() {
     std::cout<<test_sequence.Get(3)<<"\n";
     std::cout<<test_sequence.Get(4)<<"\n";
     std::cout<<test_sequence.Get(5)<<"\n";
-    /*
-    LazySequence<int> empty_thing;
-    empty_thing.Append(3);
-    empty_thing.Prepend(2);
-    empty_thing.Append(7);
-    empty_thing.Prepend(1);
-    empty_thing.InsertAt(6, 3);
-    empty_thing.InsertAt(5, 3);
-    empty_thing.InsertAt(4, 3);
-    std::cout<<empty_thing.GetLength().get_finite()<<"\n";
-    std::cout<<empty_thing.GetLength().get_infinite()<<"\n";
+    */
+    LazySequence<int>* empty_thing = new LazySequence<int>;
+    empty_thing = empty_thing->Append(3);
+    empty_thing = empty_thing->Prepend(2);
+    empty_thing = empty_thing->Append(7);
+    empty_thing = empty_thing->Prepend(2);
+    empty_thing = empty_thing->InsertAt(6, 3);
+    empty_thing = empty_thing->InsertAt(5, 3);
+    empty_thing = empty_thing->InsertAt(4, 3);
+    std::cout<<empty_thing->GetLength().get_finite()<<"\n";
+    std::cout<<empty_thing->GetLength().get_infinite()<<"\n";
     //std::cout<<empty_thing.GetLast();
     for (int i = 0; i < 7; i++) {
-        std::cout<<empty_thing.Get(i)<<"\n";
+        std::cout<<empty_thing->Get(i)<<"\n";
     }
-    */
+    
     /*
     auto square_gen = new SquareGenerator<int>();
     LazySequence<int>* test_sequence = new LazySequence<int>(square_gen);

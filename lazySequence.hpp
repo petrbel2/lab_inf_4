@@ -13,9 +13,9 @@ private:
     Generator<data_type>* generator;
     Cache<data_type> cache;
 public:
-    LazySequence(): length(0, 0), gen_pos(0, 0), generator(), cache(10) {}
+    LazySequence(): length(0, 0), gen_pos(0, 0), generator(nullptr), cache(10) {}
     LazySequence(Generator<data_type>* gen): length(gen->get_length()), gen_pos(0, 0), generator(gen), cache(10) {}
-    LazySequence (data_type* items, int count): length(0, count), gen_pos(0, 0), generator(), cache(10) {
+    LazySequence (data_type* items, int count): length(0, count), gen_pos(0, 0), generator(nullptr), cache(10) {
         for (int i = 0; i < count; i++) {
             this->Append(items[i]);
         }
@@ -56,10 +56,13 @@ public:
     }
  
     data_type Get(int index) {
+        if (index < 0) {
+            throw std::logic_error("Index below zero");
+        }
         if (length.get_finite() <= index and length.get_infinite() == 0) {
             throw std::logic_error("Index greater than length");
         }
-        else if (cache.contains(index)) {
+        if (cache.contains(index)) {
             return cache.get(index);
         }
         else if (Ordinal(0, index) < gen_pos) {
@@ -81,16 +84,14 @@ public:
         if (length <= index) {
             throw std::logic_error("Index greater than length");
         }
-        else if (cache.contains(index)) {
+        if (cache.contains(index)) {
             return cache.get(index);
         }
-        else if (index < gen_pos) {
+        if (index < gen_pos) {
             throw std::logic_error("Index passed and deleted from cache");
         }
-        else if (gen_pos.get_infinite() < index.get_infinite()) {
-            gen_pos = index;
+        if (gen_pos.get_infinite() < index.get_infinite()) {
             data_type result = generator->get(index);
-            cache.push(result);
             return result;
         }
         else {
@@ -111,6 +112,9 @@ public:
 
     LazySequence<data_type>* Append(data_type item) {
         length++;
+        //if (generator == nullptr) {
+        //    generator = new EmptyGenerator<data_type>();
+        //}
         return new LazySequence<data_type>(new AppendGenerator(length, item, generator->clone()));
     }
     

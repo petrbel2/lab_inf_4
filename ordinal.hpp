@@ -6,7 +6,11 @@ private:
     int infinite;
     int finite;
 public:
-    Ordinal(int num_1, int num_2): infinite(num_1), finite(num_2) {}
+    Ordinal(int num_1, int num_2): infinite(num_1), finite(num_2) {
+        if (num_1 < 0 or num_2 < 0) {
+                throw std::invalid_argument("Ordinal value cannot be negative");
+            }
+    }
     Ordinal(): infinite(0), finite(0) {}
 
     static Ordinal finity(int length) { return Ordinal(0, length); }

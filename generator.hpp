@@ -132,27 +132,34 @@ class AppendGenerator: public Generator<data_type> {
         }
         
         data_type get(Ordinal elem_position) {
-            if (elem_position == (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
-                return elem;
-            }
-            else if (pos < (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
-                pos = elem_position;
-                return base->get(elem_position);
+            data_type result;
+            if (elem_position.is_infinite()) {
+                if (elem_position == Ordinal(length.get_infinite(), length.get_finite() - 1)) {
+                    return elem;
+                }
+                else {
+                    return base->get(elem_position);
+                }
             }
             else {
-                throw std::runtime_error("No more elements in AppendGenerator");
+                while (pos < elem_position) {
+                    result = this->get_next();
+                }
+                return result;
             }
+            throw std::runtime_error("Unknown error in AppendGenerator");
         }
 
         data_type get_next() {
             if (pos < (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 pos++;
                 return base->get_next();
-            } else if (pos == (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
+            } 
+            if (pos == (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 pos++;
                 return elem;
             }
-            return elem; 
+            throw std::runtime_error("Unknown error in AppendGenerator");
         }
 
         AppendGenerator* clone() const {
@@ -187,13 +194,17 @@ class PrependGenerator: public Generator<data_type> {
         }
 
         data_type get(Ordinal elem_position) {
-            if (elem_position == Ordinal::finity(0)) {
-                return elem;
-            } else {
-                pos = elem_position;
-                return base->get(elem_position);
+            data_type result;
+            if (elem_position.is_infinite()) {
+                    return base->get(elem_position);
+                }
+            else {
+                while (pos < elem_position) {
+                    result = this->get_next();
+                }
+                return result;
             }
-            //mistake
+            throw std::runtime_error("Unknown error PrependGenerator");
         }
 
         data_type get_next() {
@@ -246,14 +257,25 @@ class InsertGenerator: public Generator<data_type> {
         }
 
         data_type get(Ordinal elem_position) {
-            if (elem_position == elem_pos) {
-                pos = elem_position;
-                return elem;
-            } else {
-                pos = elem_position;
-                return base->get(elem_position);
+            data_type result;
+            if (elem_position.is_infinite()) {
+                if (elem_position == elem_pos) {
+                    return elem;
+                }
+                else {
+                    if (elem_pos.get_infinite() == elem_position.get_infinite() and elem_pos < elem_position) {
+                        return base->get(Ordinal(elem_position.get_infinite(), elem_position.get_finite() - 1));
+                    }
+                    return base->get(elem_position);
+                }
             }
-            //mistake
+            else {
+                while (pos < elem_position) {
+                    result = this->get_next();
+                }
+                return result;
+            }
+            throw std::runtime_error("Unknown error in InsertGenerator");
         }
         
 
@@ -304,18 +326,20 @@ class RemoveGenerator: public Generator<data_type> {
         }
         
         data_type get(Ordinal elem_position) {
-            if (elem_position == elem_pos and this->has_next()) {
-                pos++;
-                base->get_next();
-                pos++;
-                return base->get_next();
-            } else if (this->has_next()) {
-                pos = elem_position;
+            data_type result;
+            if (elem_position.is_infinite()) {
+                if (elem_pos.get_infinite() == elem_position.get_infinite() and elem_pos < elem_position) {
+                    return base->get(Ordinal(elem_position.get_infinite(), elem_position.get_finite() + 1));
+                }
                 return base->get(elem_position);
             }
             else {
-                throw std::logic_error("No more elements in RemoveGenerator");
+                while (pos < elem_position) {
+                    result = this->get_next();
+                }
+                return result;
             }
+            throw std::runtime_error("Unknown error in RemoveGenerator");
         }
 
         data_type get_next() {
@@ -364,9 +388,17 @@ class MapGenerator: public Generator<data_type> {
         }
         
         data_type get(Ordinal elem_position) {
-            pos = elem_position;
-            return func(base->get(elem_position));
-            //mistake
+                data_type result;
+            if (elem_position.is_infinite()) {
+                return base->get(elem_position);
+                }
+            else {
+                while (pos < elem_position) {
+                    result = this->get_next();
+                }
+                return result;
+            }
+            throw std::runtime_error("Unknown error in MapGenerator");
         }
         
 
@@ -436,7 +468,6 @@ class WhereGenerator: public Generator<data_type> {
             data_type result;
             while (not flag) {
                 if (base->has_next()) {
-                    
                     result = base->get_next();
                     flag = func(result);
                 }
@@ -587,6 +618,32 @@ class ConcatGenerator: public Generator<data_type> {
         ConcatGenerator* clone() const {
             return new ConcatGenerator(length, concat_seq->Clone(), base->clone());
         }
+};
+
+template<typename data_type>
+class EmptyGenerator {
+    public:
+        Ordinal get_length() const {
+            return Ordinal(0, 0);
+        }
+        Ordinal position() const {
+            return Ordinal(0, 0);
+        }
+        bool has_next() const {
+            return false;
+        }
+        data_type get(Ordinal elem_position) {
+            throw std::runtime_error("Generator is empty");
+        }
+        data_type get_next() {
+            throw std::runtime_error("Generator is empty");
+        }
+
+        Generator<data_type>* clone() const {
+            return new EmptyGenerator;
+        } 
+
+        ~EmptyGenerator() {};
 };
 
 #endif
