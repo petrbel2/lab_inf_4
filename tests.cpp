@@ -1,6 +1,7 @@
 #include <iostream>
 #include "lazySequence.hpp"
 #include "tests.hpp"
+#include "stream.hpp"
 
 int test_cache() {
     Cache<int> t_cache(10);
@@ -184,7 +185,7 @@ int test_array() {
     try {
         int init_data[] = {10, 20, 30, 40, 50};
         DynamicArray<int> arr(init_data, 5);
-        int* sub = arr.GetSubArray(1, 4); // Должно вернуть {20, 30, 40}
+        int* sub = arr.GetSubArray(1, 4); 
         if (sub[0] != 20 || sub[1] != 30 || sub[2] != 40) {
             delete[] sub;
             throw std::runtime_error("DynamicArray GetSubArray failed");
@@ -646,5 +647,193 @@ int test_generators_together() {
         std::cout << "Complex test failed: " << error.what() << "\n";
     }
     delete basic_seq;
+    return good_counter;
+}
+
+int test_lazyseqreadstream() {
+    int good_counter = 0;
+    try {
+        int init_data[] = {10, 20, 30, 40, 50};
+        LazySequence<int> seq(init_data, 5);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        if (stream.get_position() != 0) {
+            throw std::runtime_error("LazySequenceReadStream initial position is not 0");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        if (stream.read() != 10 || stream.read() != 20 || stream.read() != 30) {
+            throw std::runtime_error("LazySequenceReadStream read sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        stream.read();
+        stream.read();
+        if (stream.get_position() != 2) {
+            throw std::runtime_error("LazySequenceReadStream get_position failed after reads");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        stream.go_to_index(2);
+        if (stream.get_position() != 2) {
+            throw std::runtime_error("LazySequenceReadStream go_to_index failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        stream.go_to_index(1);
+        stream.go_forward();
+        if (stream.get_position() != 2) {
+            throw std::runtime_error("LazySequenceReadStream go_forward failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        stream.go_to_index(2);
+        stream.go_back();
+        if (stream.get_position() != 1) {
+            throw std::runtime_error("LazySequenceReadStream go_back failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        stream.close();
+        bool threw = false;
+        try {
+            stream.read();
+        } catch (const std::logic_error&) {
+            threw = true;
+        }
+        if (!threw) {
+            throw std::runtime_error("LazySequenceReadStream did not throw on read after close");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        if (!stream.is_can_go_to_index()) {
+            throw std::runtime_error("LazySequenceReadStream is_can_go_to_index should be true");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        if (!stream.is_can_go_back()) {
+            throw std::runtime_error("LazySequenceReadStream is_can_go_back should be true");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        stream.go_to_index(3);
+        if (!stream.is_end_of_stream()) {
+            throw std::runtime_error("LazySequenceReadStream is_end_of_stream failed at end");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        bool threw = false;
+        try {
+            stream.go_to_index(-1);
+        } catch (const std::out_of_range&) {
+            threw = true;
+        }
+        if (!threw) {
+            throw std::runtime_error("LazySequenceReadStream go_to_index did not throw on negative index");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
+    try {
+        int init_data[] = {10, 20, 30};
+        LazySequence<int> seq(init_data, 3);
+        LazySequenceReadStream<int> stream(seq);
+        stream.open();
+        bool threw = false;
+        try {
+            stream.go_to_index(4);
+        } catch (const std::out_of_range&) {
+            threw = true;
+        }
+        if (!threw) {
+            throw std::runtime_error("LazySequenceReadStream go_to_index did not throw on out of bounds index");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << "\n";
+    }
+
     return good_counter;
 }

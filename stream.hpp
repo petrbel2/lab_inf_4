@@ -53,7 +53,7 @@ template <typename T> class SequenceReadStream : public ReadOnlyStream<T> {
     public:
         SequenceReadStream(const Sequence<T> &source):source(&source), position(0), opened(false) {}
 
-        open() {
+        void open() {
             position = 0;
             opened = true;
         }
@@ -132,7 +132,7 @@ template <typename T> class LazySequenceReadStream : public ReadOnlyStream<T> {
         }
         bool is_end_of_stream() const {
             ensure_opened();
-            return source->get_length().is_finite() && position >= source->get_length().value();
+            return source->GetLength().is_finite() && position >= source->GetLength().get_finite();
         }
         T read() {
             ensure_opened();
@@ -140,7 +140,7 @@ template <typename T> class LazySequenceReadStream : public ReadOnlyStream<T> {
                 throw std::out_of_range("End of stream");
             }
 
-            T value = source->get(position);
+            T value = source->Get(position);
             position++;
             return value;
         }
@@ -155,7 +155,7 @@ template <typename T> class LazySequenceReadStream : public ReadOnlyStream<T> {
             if (index < 0) {
                 throw std::out_of_range("Stream position out of range");
             }
-            if (source->get_length().is_finite() && index > source->get_length().value()) {
+            if (source->GetLength().is_finite() && index > source->GetLength().get_finite()) {
                 throw std::out_of_range("Stream position out of range");
             }
 

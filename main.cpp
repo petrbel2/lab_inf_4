@@ -1,6 +1,7 @@
 #include <iostream>
 #include "lazySequence.hpp"
 #include "tests.hpp"
+#include "stream.hpp"
 //#include <cstdio>
 
 
@@ -59,6 +60,8 @@ int main() {
     std::cout<<"ConcatGenerator testing. successful tests "<<big_counter<<" out of 4\n";
     big_counter = test_generators_together();
     std::cout<<"Multiple generators testing. successful tests "<<big_counter<<" out of 1\n";
+    big_counter = test_lazyseqreadstream();
+    std::cout<<"LaztSequenceReadStream testing. successful tests "<<big_counter<<" out of 12\n";
     
     int choice;
     int buffer;

@@ -93,7 +93,7 @@ public:
     }
 
     Ordinal GetMaterializedCount() const{
-        return pos;
+        return gen_pos;
     }
 
     LazySequence<data_type>* Append(data_type item) {

@@ -6,7 +6,7 @@ int test_ordinal();
 int test_optional();
 int test_array();
 int test_lazy_seq();
-int test_readstream();
+int test_lazyseqreadstream();
 int test_writestream();
 int test_square_generator();
 int test_fibonaccy_generator();
