@@ -1,6 +1,7 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 #include "ordinal.hpp"
+#include "sequence.hpp"
 
 template<typename data_type>
 class Generator {
@@ -134,18 +135,12 @@ class AppendGenerator: public Generator<data_type> {
             if (elem_position == (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 return elem;
             }
-            else {
-            if (pos < (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
+            else if (pos < (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 pos = elem_position;
                 return base->get(elem_position);
             }
-            else if (pos == length) {
-                return elem;
-            }
             else {
-                std::cout<<"YOU DUMB MOTHERFUCKER";
-                return -42;
-            }
+                throw std::runtime_error("No more elements in AppendGenerator");
             }
         }
 
@@ -417,8 +412,22 @@ class WhereGenerator: public Generator<data_type> {
         }
         
         data_type get(Ordinal elem_position) {
-            return 0;
-            //mistake
+            bool flag = false;
+            data_type result;
+            while (pos < elem_position) {
+                while (not flag) {
+                if (base->has_next()) {
+                    
+                    result = base->get_next();
+                    flag = func(result);
+                }
+                else {
+                    throw std::logic_error("No more elements in WhereGenerator");
+                }
+            }
+            pos++;
+            }
+            return result;
         }
         
 
@@ -448,15 +457,61 @@ class WhereGenerator: public Generator<data_type> {
         }
 };
 
-/*
+
 template <typename data_type>
 class FunctionGenerator: public Generator<data_type> {
     private:
         Ordinal length;
         Ordinal pos;
         data_type(*func)(data_type);
+        Sequence<data_type>* values;
     public:
-        FunctionGenerator(data_type(*func)(data_type)): length(1, 0), pos(0, 0), func(func) {}
+        FunctionGenerator(data_type(*func)(Sequence<data_type>*), Sequence<data_type>* start_val): length(1, 0), pos(0, 0), func(func), values(start_val) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return true;
+        }
+        
+        data_type get(Ordinal elem_position) {
+            data_type result;
+            while (pos < elem_position) {
+                result = this->get_next();
+            }
+            return result;
+        }
+        
+
+        data_type get_next() {
+            pos++;
+            data_type result = func(values);
+            for (int i = 0; i < values.GetLength().get_finite(); i++) {
+                values = values->Append(result);
+                values = values.GetSubsequence(1, values->GetLength());
+            }
+            return result;
+        }
+
+        FunctionGenerator* clone() const {
+            return new FunctionGenerator(func, values);
+        }
+};
+
+
+template <typename data_type>
+class SubsequenceGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        Ordinal subseq_start;
+        Ordinal subseq_end;
+        Generator<data_type>* base;
+    public:
+        SubsequenceGenerator(Ordinal start, Ordinal end, Generator<data_type>* base_gen): length(end.get_infinite() - start.get_infinite(), end.get_finite() - start.get_finite()), 
+        pos(0, 0), subseq_start(start), subseq_end(end), base(base_gen) {}
         
         Ordinal position() const {
             return pos;
@@ -467,26 +522,71 @@ class FunctionGenerator: public Generator<data_type> {
         }
         
         data_type get(Ordinal elem_position) {
-            pos = elem_position;
-            return func(base->get(elem_position));
-            //mistake
+            return 0;
         }
         
 
         data_type get_next() {
             if (this->has_next()) {
                 pos++;
-                return func(base->get_next());
+                return base->get_next();
             }
             else {
-                return -68;
-                //mistake
+                throw std::runtime_error("No more elements in SubsequenceGenerator");
             }
         }
 
-        MapGenerator* clone() const {
-            return new MapGenerator(length, func, base->clone());
+        SubsequenceGenerator* clone() const {
+            return new SubsequenceGenerator(length, subseq_start, subseq_end, base->clone());
         }
 };
-*/
+
+template <typename data_type>
+class LazySequence;
+
+template <typename data_type>
+class ConcatGenerator: public Generator<data_type> {
+    private:
+        Ordinal length;
+        Ordinal pos;
+        Ordinal concat_start;
+        LazySequence<data_type>* concat_seq;
+        Generator<data_type>* base;
+    public:
+        ConcatGenerator(Ordinal length, LazySequence<data_type>* conc, Generator<data_type>* base_gen): length(length + conc.GetLength()), 
+        pos(0, 0), concat_start(length), concat_seq(conc), base(base_gen) {}
+        
+        Ordinal position() const {
+            return pos;
+        }
+
+        bool has_next() const {
+            return pos <= length;
+        }
+        
+        data_type get(Ordinal elem_position) {
+            return 0;
+        }
+        
+
+        data_type get_next() {
+            if (this->has_next()) {
+                pos++;
+                if (pos < Ordinal(concat_start.get_infinite(), concat_start.get_finite())) {
+                    return base->get_next();
+                }
+                else {
+                    return concat_seq->Get(Ordinal(pos.get_infinite() - concat_start.get_infinite(), pos.get_finite() - concat_start.get_finite()));
+                }
+            }
+            else {
+                throw std::runtime_error("No more elements in ConcatGenerator");
+            }
+        }
+
+        ConcatGenerator* clone() const {
+            return new ConcatGenerator(length, concat_seq->Clone(), base->clone());
+        }
+};
+
 #endif

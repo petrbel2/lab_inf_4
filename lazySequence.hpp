@@ -105,9 +105,6 @@ public:
         }
     }
 
-    //LazySequence <data_type>* GetSubsequence(int startIndex, int endIndex) {
-    //}
-
     //int GetMaterializedCount() const{
     //    return cache.get_last_index();
     //}
@@ -116,17 +113,7 @@ public:
         length++;
         return new LazySequence<data_type>(new AppendGenerator(length, item, generator->clone()));
     }
-    /*
-    Sequence<data_type>* Prepend(data_type item) {
-        if (length.get_infinite() == 0) {
-        length++;
-        }
-        Generator<data_type>* old_gen = generator;
-        generator = new PrependGenerator(length, item, generator->clone());
-        delete old_gen;
-        return this;
-    }
-    */
+    
     LazySequence<data_type>* Prepend(data_type item) {
         if (length.get_infinite() == 0) {
         length++;
@@ -189,6 +176,20 @@ public:
         return new LazySequence<data_type>(new ConcatGenerator(length, list, generator->clone()));        
     }
 
+    LazySequence <data_type>* GetSubsequence(int startIndex, int endIndex) {
+        if (endIndex <= startIndex or length < Ordinal(0, endIndex)) {
+            throw std::logic_error("Incorrect indexes");
+        }
+        return new LazySequence<data_type>(new SubsequenceGenerator(Ordinal(0, startIndex), Ordinal(0, endIndex), generator->clone()));
+    }
+
+    LazySequence <data_type>* GetSubsequence(Ordinal startIndex, Ordinal endIndex) {
+        if (endIndex <= startIndex or length < endIndex) {
+            throw std::logic_error("Incorrect indexes");
+        }
+        return new LazySequence<data_type>(new SubsequenceGenerator(startIndex, endIndex, generator->clone()));
+    }
+
     LazySequence<data_type>* Clone() {
         return new LazySequence<data_type>(generator->clone());
     }
@@ -196,98 +197,6 @@ public:
     ~LazySequence() {
         delete generator;
     }
-};
-
-template <typename data_type>
-class ConcatGenerator: public Generator<data_type> {
-    private:
-        Ordinal length;
-        Ordinal pos;
-        Ordinal concat_start;
-        LazySequence<data_type>* concat_seq;
-        Generator<data_type>* base;
-    public:
-        ConcatGenerator(Ordinal length, LazySequence<data_type>* conc, Generator<data_type>* base_gen): length(length + conc.GetLength()), 
-        pos(0, 0), concat_start(length), concat_seq(conc), base(base_gen) {}
-        
-        Ordinal position() const {
-            return pos;
-        }
-
-        bool has_next() const {
-            return pos <= length;
-        }
-        
-        data_type get(Ordinal elem_position) {
-            return 0;
-            //mistake
-        }
-        
-
-        data_type get_next() {
-            if (this->has_next()) {
-                pos++;
-                if (pos < Ordinal(concat_start.get_infinite(), concat_start.get_finite())) {
-                    return base->get_next();
-                }
-                else {
-                    return concat_seq->Get(Ordinal(pos.get_infinite() - concat_start.get_infinite(), pos.get_finite() - concat_start.get_finite()));
-                }
-            }
-            else {
-                throw std::runtime_error("No more elements in ConcatGenerator");
-            }
-        }
-
-        ConcatGenerator* clone() const {
-            return new ConcatGenerator(length, concat_seq->Clone(), base->clone());
-        }
-};
-
-template <typename data_type>
-class ConcatGenerator: public Generator<data_type> {
-    private:
-        Ordinal length;
-        Ordinal pos;
-        Ordinal concat_start;
-        LazySequence<data_type>* concat_seq;
-        Generator<data_type>* base;
-    public:
-        ConcatGenerator(Ordinal length, LazySequence<data_type>* conc, Generator<data_type>* base_gen): length(length + conc.GetLength()), 
-        pos(0, 0), concat_start(length), concat_seq(conc), base(base_gen) {}
-        
-        Ordinal position() const {
-            return pos;
-        }
-
-        bool has_next() const {
-            return pos <= length;
-        }
-        
-        data_type get(Ordinal elem_position) {
-            return 0;
-            //mistake
-        }
-        
-
-        data_type get_next() {
-            if (this->has_next()) {
-                pos++;
-                if (pos < Ordinal(concat_start.get_infinite(), concat_start.get_finite())) {
-                    return base->get_next();
-                }
-                else {
-                    return concat_seq->Get(Ordinal(pos.get_infinite() - concat_start.get_infinite(), pos.get_finite() - concat_start.get_finite()));
-                }
-            }
-            else {
-                throw std::runtime_error("No more elements in ConcatGenerator");
-            }
-        }
-
-        ConcatGenerator* clone() const {
-            return new ConcatGenerator(length, concat_seq->Clone(), base->clone());
-        }
 };
 
 #endif

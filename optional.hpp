@@ -16,8 +16,7 @@ template <typename data_type> class Optional {
 
         data_type get_value() {
             if (!if_value) {
-                //throw std::runtime_error("Option does not have a value");
-                return 0;
+                throw std::runtime_error("Option does not have a value");
             }
             return value;
         }
