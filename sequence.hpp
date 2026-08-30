@@ -15,7 +15,7 @@ public:
     virtual Sequence<data_type>* InsertAt(data_type new_elem, int postion) = 0;
 
     virtual Sequence<data_type>* GetSubsequence(int startIndex, int endIndex) = 0; 
-    //virtual Sequence<data_type>* Concat(Sequence<data_type>*) = 0;
+    virtual Sequence<data_type>* Concat(Sequence<data_type>*) = 0;
 };
 
 #endif
