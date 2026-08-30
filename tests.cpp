@@ -2,6 +2,8 @@
 #include "lazySequence.hpp"
 #include "tests.hpp"
 #include "stream.hpp"
+#include "ListSequence.hpp"
+#include "DynamicSequence.hpp"
 
 int test_cache() {
     Cache<int> t_cache(10);
