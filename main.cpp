@@ -61,7 +61,11 @@ int main() {
     big_counter = test_generators_together();
     std::cout<<"Multiple generators testing. successful tests "<<big_counter<<" out of 1\n";
     big_counter = test_lazyseqreadstream();
-    std::cout<<"LaztSequenceReadStream testing. successful tests "<<big_counter<<" out of 12\n";
+    std::cout<<"LazySequenceReadStream testing. successful tests "<<big_counter<<" out of 12\n";
+    big_counter = test_seqreadstream();
+    std::cout<<"SequenceReadStream testing. successful tests "<<big_counter<<" out of 8\n";
+    big_counter = test_seqwritestream();
+    std::cout<<"SequenceWriteStream testing. successful tests "<<big_counter<<" out of 5\n";
     
     int choice;
     int buffer;

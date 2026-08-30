@@ -307,10 +307,11 @@ int double_val(int x) {
 bool is_even(int x) {
     return x % 2 == 0;
 }
-
+/*
 int func_seq_test(Sequence<int>* seq) {
     return seq->GetLength().get_finite();
 }
+*/
 
 int test_append_generator() {
     int good_counter = 0;
@@ -837,5 +838,98 @@ int test_lazyseqreadstream() {
         std::cout << error.what() << "\n";
     }
 
+    return good_counter;
+}
+
+int test_seqreadstream() {
+    int good_counter = 0;
+    try {
+        int* initial = new int[3]{10, 20, 30};
+        MutDynamicSequence<int> seq(initial, 3);
+        SequenceReadStream<int> stream(seq);
+        
+        stream.open();
+        if (stream.get_position() != 0) {
+            throw std::runtime_error("Initial position should be 0");
+        }
+        good_counter++;
+        
+        if (stream.is_end_of_stream()) {
+            throw std::runtime_error("Stream should not be at end initially");
+        }
+        good_counter++;
+
+        int val1 = stream.read();
+        if (val1 != 10) {
+            throw std::runtime_error("First read should be 10");
+        }
+        good_counter++;
+
+        if (stream.get_position() != 1) {
+            throw std::runtime_error("Position should be 1 after first read");
+        }
+        good_counter++;
+
+        stream.go_forward();
+        if (stream.get_position() != 2) {
+            throw std::runtime_error("Position should be 2 after go_forward");
+        }
+        good_counter++;
+
+        int val2 = stream.read();
+        if (val2 != 30) {
+            throw std::runtime_error("Second read should be 30");
+        }
+        good_counter++;
+
+        if (!stream.is_end_of_stream()) {
+            throw std::runtime_error("Stream should be at end after reading all elements");
+        }
+        good_counter++;
+
+        stream.close();
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << error.what() << "\n";
+    }
+    return good_counter;
+}
+
+int test_seqwritestream() {
+    int good_counter = 0;
+    try {
+        int* initial = new int[2]{10, 20};
+        MutDynamicSequence<int> seq(initial, 2);
+        SequenceWriteStream<int> stream(seq);
+        
+        stream.open();
+        if (stream.get_position() != 2) {
+            throw std::runtime_error("Initial position should be length of sequence");
+        }
+        good_counter++;
+
+        stream.write(30);
+        if (stream.get_position() != 3) {
+            throw std::runtime_error("Position should be 3 after write");
+        }
+        good_counter++;
+
+        stream.go_back();
+        if (stream.get_position() != 2) {
+            throw std::runtime_error("Position should be 2 after go_back");
+        }
+        good_counter++;
+
+        stream.write(25);
+        if (stream.get_position() != 3) {
+            throw std::runtime_error("Position should be 3 after write at index 2");
+        }
+        good_counter++;
+
+        stream.close();
+        good_counter++;
+    } catch (const std::exception& error) {
+        std::cout << error.what() << "\n";
+    }
     return good_counter;
 }

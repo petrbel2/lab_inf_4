@@ -40,7 +40,7 @@ template <typename T> class WriteOnlyStream {
 
 template <typename T> class SequenceReadStream : public ReadOnlyStream<T> {
     private:
-        const Sequence<T> *source;
+        Sequence<T> *source;
         int position;
         bool opened;
 
@@ -51,7 +51,7 @@ template <typename T> class SequenceReadStream : public ReadOnlyStream<T> {
         }
 
     public:
-        SequenceReadStream(const Sequence<T> &source):source(&source), position(0), opened(false) {}
+        SequenceReadStream(Sequence<T> &source):source(&source), position(0), opened(false) {}
 
         void open() {
             position = 0;
@@ -64,7 +64,7 @@ template <typename T> class SequenceReadStream : public ReadOnlyStream<T> {
 
         bool is_end_of_stream() const {
             ensure_opened();
-            return position >= source->get_length();
+            return position >= source->GetLength();
         }
 
         T read() {
@@ -189,7 +189,7 @@ template <typename T> class SequenceWriteStream : public WriteOnlyStream<T> {
         SequenceWriteStream(Sequence<T> &target) : target(&target), position(0), opened(false) {}
 
         void open() {
-            position = target->get_length();
+            position = target->GetLength();
             opened = true;
         }
         void close() {
@@ -197,17 +197,15 @@ template <typename T> class SequenceWriteStream : public WriteOnlyStream<T> {
         }
         int write(const T &item) {
             ensure_opened();
-            if (position < 0 || position > target->get_length()) {
+            if (position < 0 || position > target->GetLength()) {
                 throw std::out_of_range("Write position out of range");
             }
 
-            if (position == target->get_length()) {
-                Sequence<T> *result = target->append(item);
+            if (position == target->GetLength()) {
+                Sequence<T> *result = target->Append(item);
                 target = result;
             } else {
-                Sequence<T> *without_old_item = target->remove(position);
-                target = without_old_item;
-                Sequence<T> *result = target->insert(item, position);
+                Sequence<T> *result = target->InsertAt(item, position);
                 target = result;        
             }
 
@@ -222,7 +220,7 @@ template <typename T> class SequenceWriteStream : public WriteOnlyStream<T> {
         }
         int go_to_index(int index) {
             ensure_opened();
-            if (index < 0 || index > target->get_length()) {
+            if (index < 0 || index > target->GetLength()) {
                 throw std::out_of_range("Stream position out of range");
             }
 

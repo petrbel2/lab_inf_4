@@ -5,7 +5,7 @@
 #include "cache.hpp"
 
 template <typename data_type>
-class LazySequence: public Sequence<data_type>
+class LazySequence//: public Sequence<data_type>
 {
 private:
     Ordinal length;

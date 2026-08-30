@@ -63,7 +63,7 @@ public:
         }
     }
 
-    Sequence<data_type>* GetSubList(int startIndex, int endIndex) {
+    Sequence<data_type>* GetSubsequence(int startIndex, int endIndex) {
         auto result = static_cast<DynamicSequence<data_type>*>(Copy());
         result->array.Resize(endIndex);
         for (int i = startIndex; i < endIndex; i++) {
