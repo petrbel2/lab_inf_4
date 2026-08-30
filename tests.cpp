@@ -534,8 +534,8 @@ int test_function_generator() {
 */
 int test_subseq_generator() {
     int good_counter = 0;
-    SquareGenerator<int> base_gen;
-    SubsequenceGenerator<int> gen(Ordinal(0, 1), Ordinal(0, 4), &base_gen);
+    SquareGenerator<int>* base_gen = new SquareGenerator<int>();
+    SubsequenceGenerator<int> gen(Ordinal(0, 1), Ordinal(0, 4), base_gen);
     try {
         if (gen.position().get_finite() != 0) {
             throw std::runtime_error("SubsequenceGenerator initial position is not 0");
@@ -567,10 +567,10 @@ int test_subseq_generator() {
 
 int test_concat_generator() {
     int good_counter = 0;
-    SquareGenerator<int> base_gen;
+    SquareGenerator<int>* base_gen = new SquareGenerator<int>();
     int init_data[] = {99, 100};
-    LazySequence<int> concat_seq(init_data, 2);
-    ConcatGenerator<int> gen(Ordinal::finity(2), &concat_seq, &base_gen);
+    LazySequence<int>* concat_seq = new LazySequence(init_data, 2);
+    ConcatGenerator<int> gen(Ordinal(1, 0), concat_seq, base_gen);
     try {
         if (gen.position().get_finite() != 0) {
             throw std::runtime_error("ConcatGenerator initial position is not 0");
@@ -580,8 +580,16 @@ int test_concat_generator() {
         std::cout << error.what() << "\n"; 
     }
     try {
-        if (gen.get_next() != 0 || gen.get_next() != 1 || gen.get_next() != 99 || gen.get_next() != 100) {
+        if (gen.get_next() != 0 || gen.get_next() != 1) {
             throw std::runtime_error("ConcatGenerator get_next() sequence failed");
+        }
+        good_counter++;
+    } catch (const std::runtime_error& error) { 
+        std::cout << error.what() << "\n"; 
+    }
+    try {
+        if (gen.get(Ordinal(1, 0)) != 99) {
+            throw std::runtime_error("ConcatGenerator get() sequence failed");
         }
         good_counter++;
     } catch (const std::runtime_error& error) { 
@@ -597,5 +605,46 @@ int test_concat_generator() {
     } catch (const std::exception& error) {
         std::cout << "Clone test failed: " << error.what() << "\n";
     }
+    return good_counter;
+}
+
+int test_generators_together() {
+    int good_counter = 0;
+    auto square_gen = new SquareGenerator<int>();
+    LazySequence<int>* basic_seq = new LazySequence<int>(square_gen);
+    basic_seq = basic_seq->Append(90);
+    basic_seq = basic_seq->Prepend(40);
+    basic_seq = basic_seq->InsertAt(60, 3);
+    try {
+        if (basic_seq->GetLast() != 90) {
+            throw std::runtime_error("Incorrect result in generators working together");
+        }
+        if (basic_seq->GetFirst() != 40) {
+            throw std::runtime_error("Incorrect result in generators working together");
+        }
+        if (basic_seq->Get(3) != 60) {
+            throw std::runtime_error("Incorrect result in generators working together");
+        }
+        if (basic_seq->Get(3) != 60) {
+            throw std::runtime_error("Incorrect result in generators working together");
+        }
+        if (basic_seq->Get(0) != 40) {
+            throw std::runtime_error("Incorrect result in generators working together");
+        }
+        if (basic_seq->Get(1) != 0) {
+            throw std::runtime_error("Incorrect result in generators working together");
+        }
+        if (basic_seq->Get(4) != 4) {
+            throw std::runtime_error("Incorrect result in generators working together");
+        }
+        if (basic_seq->Get(5) != 9) {
+            throw std::runtime_error("Incorrect result in generators working together");
+        }
+        good_counter++;
+    }
+    catch (const std::exception& error) {
+        std::cout << "Complex test failed: " << error.what() << "\n";
+    }
+    delete basic_seq;
     return good_counter;
 }

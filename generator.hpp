@@ -156,7 +156,7 @@ class AppendGenerator: public Generator<data_type> {
             if (pos < (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 pos++;
                 return base->get_next();
-            } 
+            }
             if (pos == (Ordinal(length.get_infinite(), length.get_finite() - 1))) {
                 pos++;
                 return elem;
@@ -492,50 +492,6 @@ class WhereGenerator: public Generator<data_type> {
         }
 };
 
-/*
-template <typename data_type>
-class FunctionGenerator: public Generator<data_type> {
-    private:
-        Ordinal length;
-        Ordinal pos;
-        data_type(*func)(data_type);
-        Sequence<data_type>* values;
-    public:
-        FunctionGenerator(data_type(*func)(Sequence<data_type>*), Sequence<data_type>* start_val): length(1, 0), pos(0, 0), func(func), values(start_val) {}
-        
-        Ordinal position() const {
-            return pos;
-        }
-
-        bool has_next() const {
-            return true;
-        }
-        
-        data_type get(Ordinal elem_position) {
-            data_type result;
-            while (pos < elem_position) {
-                result = this->get_next();
-            }
-            return result;
-        }
-        
-
-        data_type get_next() {
-            pos++;
-            data_type result = func(values);
-            for (int i = 0; i < values.GetLength().get_finite(); i++) {
-                values = values->Append(result);
-                values = values->GetSubsequence(1, values->GetLength());
-            }
-            return result;
-        }
-
-        FunctionGenerator* clone() const {
-            return new FunctionGenerator(func, values);
-        }
-};
-*/
-
 template <typename data_type>
 class SubsequenceGenerator: public Generator<data_type> {
     private:
@@ -545,7 +501,7 @@ class SubsequenceGenerator: public Generator<data_type> {
         Ordinal subseq_end;
         Generator<data_type>* base;
     public:
-        SubsequenceGenerator(Ordinal start, Ordinal end, Generator<data_type>* base_gen): length(end.get_infinite() - start.get_infinite(), end.get_finite() - start.get_finite()), 
+        SubsequenceGenerator(Ordinal start, Ordinal end, Generator<data_type>* base_gen): length(end - start), 
         pos(0, 0), subseq_start(start), subseq_end(end), base(base_gen) {}
 
         Ordinal get_length() const {

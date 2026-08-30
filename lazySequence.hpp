@@ -16,8 +16,11 @@ public:
     LazySequence(): length(0, 0), gen_pos(0, 0), generator(new EmptyGenerator<data_type>()), cache(10) {}
     LazySequence(Generator<data_type>* gen): length(gen->get_length()), gen_pos(0, 0), generator(gen), cache(10) {}
     LazySequence (data_type* items, int count): length(0, count), gen_pos(0, 0), generator(new EmptyGenerator<data_type>()), cache(10) {
+        Generator<data_type>* old_generator;
         for (int i = 0; i < count; i++) {
-            this->Append(items[i]);
+            old_generator = generator;
+            generator = new AppendGenerator(Ordinal(0, i + 1), items[i], generator);
+            delete old_generator;
         }
     }
     //LazySequence (Sequence<data_type>* seq);
@@ -26,13 +29,6 @@ public:
     Ordinal GetLength() const{
         return length;
     }
-    /*
-    Generator<data_type>* GetGen() {
-        return generator;
-    }
-    */
-    
-    
 
     data_type GetFirst() {
         return this->Get(0);
@@ -96,9 +92,9 @@ public:
         }
     }
 
-    //int GetMaterializedCount() const{
-    //    return cache.get_last_index();
-    //}
+    Ordinal GetMaterializedCount() const{
+        return pos;
+    }
 
     LazySequence<data_type>* Append(data_type item) {
         length++;
