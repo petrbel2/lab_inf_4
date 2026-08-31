@@ -96,6 +96,54 @@ void run_file_write_stream_mode() {
     stream.close();
 }
 
+void run_manual_mode() {
+    int count = 0;
+    std::cout << "How many values? ";
+    std::cin >> count;
+
+    if (!std::cin || count < 0) {
+        throw std::invalid_argument("Count must be a non-negative integer");
+    }
+
+    MutDynamicSequence<int> values;
+    for (int index = 0; index < count; index++) {
+        int value = 0;
+        std::cout << "value[" << index << "] = ";
+        std::cin >> value;
+        if (!std::cin) {
+            throw std::invalid_argument("Expected integer value");
+        }
+        values.Append(value);
+    }
+
+    SequenceReadStream<int> stream(values);
+    process_stream(stream);
+}
+
+void run_lazy_mode() {
+    int count = 0;
+    std::cout << "How many values? ";
+    std::cin >> count;
+
+    if (!std::cin || count < 0) {
+        throw std::invalid_argument("Count must be a non-negative integer");
+    }
+
+    LazySequence<int>* values = new LazySequence<int>();
+    for (int index = 0; index < count; index++) {
+        int value = 0;
+        std::cout << "value[" << index << "] = ";
+        std::cin >> value;
+        if (!std::cin) {
+            throw std::invalid_argument("Expected integer value");
+        }
+        values = values->Append(value);
+    }
+
+    LazySequenceReadStream<int> stream(*values);
+    process_stream(stream);
+}
+
 void run_tests() {
     int total_counter = 0; 
     int big_counter; 
@@ -296,6 +344,46 @@ void use_lazy_sequence() {
     }
 }
 
+void use_streams() {
+    int choice = 1;
+    std::cout << " [1] File write stream\n";
+    std::cout << " [2] File read stream\n";
+    std::cout << " [3] Mutable array sequence read stream\n";
+    std::cout << " [4] Lazy sequence read stream\n";
+    std::cout << " [0] Exit\n";
+    std::cout << "----------------------------\n";
+    
+    while (choice != 0) {
+        std::cout << "Choose: ";
+        if (!(std::cin >> choice)) {
+            std::cout << "Error: not a number.\n";
+            clear_input_buffer();
+            continue;
+        }
+        
+        switch (choice) {
+            case 1:
+                run_file_write_stream_mode();
+                break;
+            case 2:
+                run_file_stream_mode();
+                break;
+            case 3:
+                run_manual_mode();
+                break;
+            case 4:
+                run_lazy_mode();
+                break;
+            case 0:
+                std::cout<<"Leaving\n";
+                break;
+            default:
+                std::cout<<"Wrong number.\n";
+                break;
+        }
+    }
+}
+
 int main() {  
     int choosing;
     std::cout<<"Enter a number: 1 - run tests, 2 - use lazy sequence, 3 - streams\n";
@@ -307,8 +395,7 @@ int main() {
         use_lazy_sequence();
     }
     else if (choosing == 3) {
-        run_file_write_stream_mode();
-        run_file_stream_mode();
+        use_streams();
     }
     else {
         std::cout<<"Incorrect input";
