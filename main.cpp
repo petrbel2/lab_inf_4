@@ -2,6 +2,8 @@
 #include "lazySequence.hpp"
 #include "tests.hpp"
 #include "stream.hpp"
+#include "onlineStatistics.hpp"
+#include <iomanip>
 //#include <cstdio>
 
 
@@ -34,18 +36,24 @@ int deserialize_int(const std::string &text) {
 std::string serialize_int(const int &text) {
     return std::to_string(text);
 }
-/*
-void clear_input_line() {
-    std::cin.clear();
-    std::cin.ignore(10000 , '\n');
+
+void print_stats(const OnlineStatistics<int> &stats) {
+    std::cout << "count=" << stats.get_count()
+              << " sum=" << stats.get_sum()
+              << " mean=" << std::fixed << std::setprecision(2) << stats.get_mean()
+              << " min=" << stats.get_min()
+              << " max=" << stats.get_max()
+              << " median=" << stats.get_median() << '\n';
 }
-*/
 
 void process_stream(ReadOnlyStream<int> &stream) {
+    OnlineStatistics<int> stats;
     stream.open();
     while (!stream.is_end_of_stream()) {
         int value = stream.read();
-        std::cout << "read " << value << "\n";
+        stats.add(value);
+        std::cout << "read " << value << " -> ";
+        print_stats(stats);
     }
 
     stream.close();
@@ -151,8 +159,9 @@ void run_tests() {
 }
 
 int main() {  
+    run_file_stream_mode();
     //run_file_write_stream_mode();
-    run_tests();
+   // run_tests();
     
     int choice;
     int buffer;

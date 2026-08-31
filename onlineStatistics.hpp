@@ -11,7 +11,7 @@ template <typename T> class OnlineStatistics {
         T min_value;
         T max_value;
         bool has_items;
-        MutableDynamicSequence<T> sorted_items;
+        MutDynamicSequence<T> sorted_items;
 
         int find_insert_index(const T &value) const;
     
@@ -32,7 +32,7 @@ template <typename T> OnlineStatistics<T>::OnlineStatistics()
 
 template <typename T> int OnlineStatistics<T>::find_insert_index(const T &value) const {
     int index = 0;
-    while (index < sorted_items.get_length() && sorted_items.get(index) < value) {
+    while (index < sorted_items.GetLength() && sorted_items.Get(index) < value) {
         index++;
     }
     return index;
@@ -54,7 +54,7 @@ template <typename T> void OnlineStatistics<T>::add(const T &value) {
 
     sum = sum + value;
     count++;
-    sorted_items.insert(value, find_insert_index(value));
+    sorted_items.InsertAt(value, find_insert_index(value));
 }
 
 template <typename T> int OnlineStatistics<T>::get_count() const {
@@ -94,11 +94,11 @@ template <typename T> double OnlineStatistics<T>::get_median() const {
         throw std::logic_error("No values");
     }
 
-    int middle = sorted_items.get_length() / 2;
-    if (sorted_items.get_length() % 2 == 1) {
-        return static_cast<double>(sorted_items.get(middle));
+    int middle = sorted_items.GetLength() / 2;
+    if (sorted_items.GetLength() % 2 == 1) {
+        return static_cast<double>(sorted_items.Get(middle));
     }
 
-    return (static_cast<double>(sorted_items.get(middle - 1)) +
-            static_cast<double>(sorted_items.get(middle))) / 2.0;
+    return (static_cast<double>(sorted_items.Get(middle - 1)) +
+            static_cast<double>(sorted_items.Get(middle))) / 2.0;
 }
