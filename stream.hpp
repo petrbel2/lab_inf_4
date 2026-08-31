@@ -253,7 +253,7 @@ template <typename T> class FileReadStream : public ReadOnlyStream<T> {
         }
     
     public:
-        FileReadStream(const std::string &path, T (*deserialize)(const std::string &text)) : path(path), deserializer(deserializer), input(), position(0), opened(false) {}
+        FileReadStream(const std::string &path, T (*deserialize)(const std::string &text)) : path(path), deserializer(deserialize), input(), position(0), opened(false) {}
 
         void open() {
             input.close();
@@ -282,7 +282,8 @@ template <typename T> class FileReadStream : public ReadOnlyStream<T> {
             }
 
             position++;
-            return deserializer(line);
+            int result = deserializer(line);
+            return result;
         }
         int get_position() const {
             return position;

@@ -27,45 +27,132 @@ static void clear_input_buffer(void) {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-int main() {
-    // Площадка 1
+int deserialize_int(const std::string &text) {
+    return std::stoi(text);
+}
+
+std::string serialize_int(const int &text) {
+    return std::to_string(text);
+}
+/*
+void clear_input_line() {
+    std::cin.clear();
+    std::cin.ignore(10000 , '\n');
+}
+*/
+
+void process_stream(ReadOnlyStream<int> &stream) {
+    stream.open();
+    while (!stream.is_end_of_stream()) {
+        int value = stream.read();
+        std::cout << "read " << value << "\n";
+    }
+
+    stream.close();
+}
+
+void run_file_stream_mode() {
+    std::string path;
+    std::cout << "File path with one integer per line: ";
+    //clear_input_line();
+    std::getline(std::cin, path);
+
+    if (path.empty()) {
+        throw std::invalid_argument("File path cannot be empty");
+    }
+
+    FileReadStream<int> stream(path, deserialize_int);
+    process_stream(stream);
+}
+
+void run_file_write_stream_mode() {
+    std::string path;
+    std::cout << "File path with one integer per line: ";
+    //clear_input_line();
+    std::getline(std::cin, path);
+
+    if (path.empty()) {
+        throw std::invalid_argument("File path cannot be empty");
+    }
+
+    FileWriteStream<int> stream(path, serialize_int);
+    stream.open();
+    int flag = 1;
+    int data;
+    while (flag) {
+        std::cout<<"Enter number\n";
+        std::cin>>data;
+        stream.write(data);
+        std::cout<<"Enter 0 to stop\n";
+        std::cin>>flag;
+    }
+    stream.close();
+}
+
+void run_tests() {
+    int total_counter = 0; 
     int big_counter; 
     big_counter = test_cache();
+    total_counter += big_counter;
     std::cout<<"Cache testing. successful tests "<<big_counter<<" out of 8\n";
     big_counter = test_ordinal();
+    total_counter += big_counter;
     std::cout<<"Ordinal testing. successful tests "<<big_counter<<" out of 8\n";
     big_counter = test_optional();
+    total_counter += big_counter;
     std::cout<<"Optional testing. successful tests "<<big_counter<<" out of 1\n";
     big_counter = test_array();
+    total_counter += big_counter;
     std::cout<<"dynamicArray testing. successful tests "<<big_counter<<" out of 8\n";
     big_counter = test_square_generator();
+    total_counter += big_counter;
     std::cout<<"SquareGenerator testing. successful tests "<<big_counter<<" out of 4\n";
     big_counter = test_fibonaccy_generator();
+    total_counter += big_counter;
     std::cout<<"FibonaccyGenerator testing. successful tests "<<big_counter<<" out of 4\n";
     big_counter = test_append_generator();
+    total_counter += big_counter;
     std::cout<<"AppendGenerator testing. successful tests "<<big_counter<<" out of 4\n";
     big_counter = test_prepend_generator();
+    total_counter += big_counter;
     std::cout<<"PrependGenerator testing. successful tests "<<big_counter<<" out of 3\n";
     big_counter = test_insert_generator();
+    total_counter += big_counter;
     std::cout<<"InsertGenerator testing. successful tests "<<big_counter<<" out of 3\n";
     big_counter = test_remove_generator();
+    total_counter += big_counter;
     std::cout<<"RemoveGenerator testing. successful tests "<<big_counter<<" out of 3\n";
     big_counter = test_map_generator();
+    total_counter += big_counter;
     std::cout<<"MapGenerator testing. successful tests "<<big_counter<<" out of 3\n";
     big_counter = test_where_generator();
+    total_counter += big_counter;
     std::cout<<"WhereGenerator testing. successful tests "<<big_counter<<" out of 3\n";
     big_counter = test_subseq_generator();
+    total_counter += big_counter;
     std::cout<<"SubsequenceGenerator testing. successful tests "<<big_counter<<" out of 3\n";
     big_counter = test_concat_generator();
+    total_counter += big_counter;
     std::cout<<"ConcatGenerator testing. successful tests "<<big_counter<<" out of 4\n";
     big_counter = test_generators_together();
+    total_counter += big_counter;
     std::cout<<"Multiple generators testing. successful tests "<<big_counter<<" out of 1\n";
     big_counter = test_lazyseqreadstream();
+    total_counter += big_counter;
     std::cout<<"LazySequenceReadStream testing. successful tests "<<big_counter<<" out of 12\n";
     big_counter = test_seqreadstream();
+    total_counter += big_counter;
     std::cout<<"SequenceReadStream testing. successful tests "<<big_counter<<" out of 8\n";
     big_counter = test_seqwritestream();
+    total_counter += big_counter;
     std::cout<<"SequenceWriteStream testing. successful tests "<<big_counter<<" out of 5\n";
+    std::cout<<"Total successful tests: "<<total_counter<<" out of 85\n";
+    std::cout<<"Failed tests: "<<85 - total_counter<<"\n";
+}
+
+int main() {  
+    //run_file_write_stream_mode();
+    run_tests();
     
     int choice;
     int buffer;

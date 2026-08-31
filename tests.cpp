@@ -518,24 +518,7 @@ int test_where_generator() {
     }
     return good_counter;
 }
-/*
-int test_function_generator() {
-    int good_counter = 0;
-    LazySequence<int> start_seq;
-    try {
-        FunctionGenerator<int> gen(func_seq_test, &start_seq);
-        if (gen.position().get_finite() != 0) {
-            throw std::runtime_error("FunctionGenerator initial position is not 0");
-        }
-        good_counter++;
-    } catch (const std::runtime_error& error) { 
-        std::cout << error.what() << "\n"; 
-    } catch (const std::exception& error) {
-        std::cout << error.what() << "\n";
-    }
-    return good_counter;
-}
-*/
+
 int test_subseq_generator() {
     int good_counter = 0;
     SquareGenerator<int>* base_gen = new SquareGenerator<int>();
