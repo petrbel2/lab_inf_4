@@ -927,6 +927,22 @@ std::string serialize(const int &text) {
 
 int test_file_streams() {
     std::string path = "C:/Users/petrbel/projects/c++/lab_inf_4/testwriting.txt";
-    //FileWriteStream<int> my_stream(serialize, path);
-    return 0;
+    FileWriteStream<int> my_stream(path, serialize);
+    my_stream.open();
+    my_stream.write(3);
+    my_stream.close();
+    FileReadStream<int> new_stream(path, deserialize);
+    new_stream.open();
+    int result = new_stream.read();
+    new_stream.close();
+    try {
+    if (result != 3) {
+            throw std::runtime_error("File streams failure");
+        }
+    }
+    catch (const std::exception& error) {
+        std::cout << "File streams test failed: " << error.what() << "\n";
+        return 0;
+    }
+    return 1;
 }

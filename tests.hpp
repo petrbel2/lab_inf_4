@@ -20,7 +20,6 @@ int test_where_generator();
 int test_concat_generator();
 int test_subseq_generator();
 int test_generators_together();
-
-
+int test_file_streams();
 
 #endif

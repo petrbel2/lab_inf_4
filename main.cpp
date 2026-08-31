@@ -206,8 +206,11 @@ void run_tests() {
     big_counter = test_seqwritestream();
     total_counter += big_counter;
     std::cout<<"SequenceWriteStream testing. successful tests "<<big_counter<<" out of 5\n";
-    std::cout<<"Total successful tests: "<<total_counter<<" out of 85\n";
-    std::cout<<"Failed tests: "<<85 - total_counter<<"\n";
+    big_counter = test_file_streams();
+    total_counter += big_counter;
+    std::cout<<"File streams testing. successful tests "<<big_counter<<" out of 1\n";
+    std::cout<<"Total successful tests: "<<total_counter<<" out of 86\n";
+    std::cout<<"Failed tests: "<<86 - total_counter<<"\n";
 }
 
 void use_lazy_sequence() {
