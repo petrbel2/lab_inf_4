@@ -28,6 +28,11 @@ static void clear_input_buffer(void) {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+void clear_input_line() {
+    std::cin.clear();
+    std::cin.ignore(10000, '\n');
+}
+
 int deserialize_int(const std::string &text) {
     return std::stoi(text);
 }
@@ -75,7 +80,7 @@ void run_file_stream_mode() {
 void run_file_write_stream_mode() {
     std::string path;
     std::cout << "File path with one integer per line: ";
-    //clear_input_line();
+    clear_input_line();
     std::getline(std::cin, path);
 
     if (path.empty()) {

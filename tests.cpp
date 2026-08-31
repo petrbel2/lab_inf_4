@@ -916,3 +916,17 @@ int test_seqwritestream() {
     }
     return good_counter;
 }
+
+int deserialize(const std::string &text) {
+    return std::stoi(text);
+}
+
+std::string serialize(const int &text) {
+    return std::to_string(text);
+}
+
+int test_file_streams() {
+    std::string path = "C:/Users/petrbel/projects/c++/lab_inf_4/testwriting.txt";
+    //FileWriteStream<int> my_stream(serialize, path);
+    return 0;
+}
