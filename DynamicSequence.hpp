@@ -49,7 +49,7 @@ public:
 
     Sequence<data_type>* InsertAt(data_type new_elem, int position) {
         auto result = static_cast<DynamicSequence<data_type>*>(Instance());
-        if ((position < 0) or (position > (array.GetLength() - 1))) {
+        if ((position < 0) or (position > (array.GetLength()))) {
             std::cout<<"Wrong index\n";
             return result;
         }

@@ -4,7 +4,6 @@
 #include "stream.hpp"
 #include "onlineStatistics.hpp"
 #include <iomanip>
-//#include <cstdio>
 
 
 int add_3(int arg) {
@@ -37,7 +36,7 @@ std::string serialize_int(const int &text) {
     return std::to_string(text);
 }
 
-void print_stats(const OnlineStatistics<int> &stats) {
+void print_stats(OnlineStatistics<int> stats) {
     std::cout << "count=" << stats.get_count()
               << " sum=" << stats.get_sum()
               << " mean=" << std::fixed << std::setprecision(2) << stats.get_mean()
@@ -158,11 +157,7 @@ void run_tests() {
     std::cout<<"Failed tests: "<<85 - total_counter<<"\n";
 }
 
-int main() {  
-    run_file_stream_mode();
-    //run_file_write_stream_mode();
-   // run_tests();
-    
+void use_lazy_sequence() {
     int choice;
     int buffer;
     int index;
@@ -294,11 +289,29 @@ int main() {
             case 0:
                 std::cout<<"Leaving\n";
                 delete seq;
-                return 0;
             default:
                 std::cout<<"Wrong number.\n";
                 break;
         }
+    }
+}
+
+int main() {  
+    int choosing;
+    std::cout<<"Enter a number: 1 - run tests, 2 - use lazy sequence, 3 - streams\n";
+    std::cin>>choosing;
+    if (choosing == 1) {
+        run_tests();
+    }
+    else if (choosing == 2) {
+        use_lazy_sequence();
+    }
+    else if (choosing == 3) {
+        run_file_write_stream_mode();
+        run_file_stream_mode();
+    }
+    else {
+        std::cout<<"Incorrect input";
     }
 }
 

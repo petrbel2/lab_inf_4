@@ -13,24 +13,24 @@ template <typename T> class OnlineStatistics {
         bool has_items;
         MutDynamicSequence<T> sorted_items;
 
-        int find_insert_index(const T &value) const;
+        int find_insert_index(const T &value);
     
     public:
         OnlineStatistics();
 
         void add(const T &value);
-        int get_count() const;
-        T get_sum() const;
-        double get_mean() const;
-        T get_min() const;
-        T get_max() const;
-        double get_median() const;
+        int get_count();
+        T get_sum();
+        double get_mean();
+        T get_min();
+        T get_max();
+        double get_median();
 };
 
 template <typename T> OnlineStatistics<T>::OnlineStatistics()
     : count(0), sum(T()), min_value(T()), max_value(T()), has_items(false), sorted_items() {}
 
-template <typename T> int OnlineStatistics<T>::find_insert_index(const T &value) const {
+template <typename T> int OnlineStatistics<T>::find_insert_index(const T &value) {
     int index = 0;
     while (index < sorted_items.GetLength() && sorted_items.Get(index) < value) {
         index++;
@@ -57,15 +57,15 @@ template <typename T> void OnlineStatistics<T>::add(const T &value) {
     sorted_items.InsertAt(value, find_insert_index(value));
 }
 
-template <typename T> int OnlineStatistics<T>::get_count() const {
+template <typename T> int OnlineStatistics<T>::get_count(){
     return count;
 }
 
-template <typename T> T OnlineStatistics<T>::get_sum() const {
+template <typename T> T OnlineStatistics<T>::get_sum() {
     return sum;
 }
 
-template <typename T> double OnlineStatistics<T>::get_mean() const {
+template <typename T> double OnlineStatistics<T>::get_mean() {
     if (!has_items) {
         throw std::logic_error("No values");
     }
@@ -73,7 +73,7 @@ template <typename T> double OnlineStatistics<T>::get_mean() const {
     return static_cast<double>(sum) / static_cast<double>(count);
 }
 
-template <typename T> T OnlineStatistics<T>::get_min() const {
+template <typename T> T OnlineStatistics<T>::get_min() {
     if (!has_items) {
         throw std::logic_error("No values");
     }
@@ -81,7 +81,7 @@ template <typename T> T OnlineStatistics<T>::get_min() const {
     return min_value;
 }
 
-template <typename T> T OnlineStatistics<T>::get_max() const {
+template <typename T> T OnlineStatistics<T>::get_max() {
     if (!has_items) {
         throw std::logic_error("No values");
     }
@@ -89,13 +89,13 @@ template <typename T> T OnlineStatistics<T>::get_max() const {
     return max_value;
 }
 
-template <typename T> double OnlineStatistics<T>::get_median() const {
+template <typename T> double OnlineStatistics<T>::get_median() {
     if (!has_items) {
         throw std::logic_error("No values");
     }
 
-    int middle = sorted_items.GetLength() / 2;
-    if (sorted_items.GetLength() % 2 == 1) {
+    int middle = count / 2;
+    if (count % 2 == 1) {
         return static_cast<double>(sorted_items.Get(middle));
     }
 
